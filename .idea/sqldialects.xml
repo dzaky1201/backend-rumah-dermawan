@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/db/migrations/20230704134254_create_operation_activities_table.down.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/db/migrations/20230704134254_create_operation_activities_table.up.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/db/migrations/20230704134336_create_invests_activities_table.up.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/db/migrations/20230704134343_create_funding_activities_table.up.sql" dialect="PostgreSQL" />
+  </component>
+</project>
