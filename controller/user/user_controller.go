@@ -7,4 +7,5 @@ import (
 type UserController interface {
 	SaveUser(c *gin.Context)
 	FindByEmail(c *gin.Context)
+	TestHitApi(c *gin.Context)
 }

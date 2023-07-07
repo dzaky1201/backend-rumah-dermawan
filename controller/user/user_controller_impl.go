@@ -101,3 +101,13 @@ func (controller *UserControllerImpl) FindByEmail(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (controller *UserControllerImpl) TestHitApi(c *gin.Context) {
+	response := web.WebResponse{
+		Code:   http.StatusOK,
+		Status: "success hit api",
+		Data:   nil,
+	}
+
+	c.JSON(http.StatusOK, response)
+}
