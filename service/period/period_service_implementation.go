@@ -22,9 +22,11 @@ func NewPeriodService(repository period.PeriodRepository, validate *validator.Va
 	}
 }
 
-func (service *PeriodServiceImpl) Save(request period2.PeriodCreateRequest) period2.PeriodResponse {
+func (service *PeriodServiceImpl) Save(request period2.PeriodCreateRequest) (period2.PeriodResponse, error) {
 	errReq := service.Validate.Struct(request)
-	helper.PanicIfError(errReq)
+	if errReq != nil {
+		return period2.PeriodResponse{}, errReq
+	}
 
 	objectPeriod := domain.InfoPeriod{
 		Month: request.Month,
@@ -44,16 +46,52 @@ func (service *PeriodServiceImpl) Save(request period2.PeriodCreateRequest) peri
 
 	yearRes, errRes := service.PeriodRepository.Save(periodReq)
 	if errRes != nil {
-		return period2.PeriodResponse{}
+		return period2.PeriodResponse{}, errRes
 	}
 
-	return helper.ToPeriodResponse(yearRes)
+	return helper.ToPeriodResponse(yearRes), nil
 
 }
 
-func (service *PeriodServiceImpl) Update(request period2.PeriodCreateRequest) period2.PeriodResponse {
-	//TODO implement me
-	panic("implement me")
+func (service *PeriodServiceImpl) Update(request period2.PeriodCreateRequest, pathId domain.YearPeriod) (period2.PeriodResponse, error) {
+	getDataDetail, err := service.PeriodRepository.FindById(pathId)
+	if err != nil {
+		return period2.PeriodResponse{}, err
+	}
+
+	// data dari periode yang mau diupdate
+	periodConvert := helper.ToPeriodResponse(getDataDetail)
+
+	// jika bulan dan tahun diupdate salah satu aja
+	if request.Year == "" {
+		request.Year = periodConvert.Year
+	} else if request.Month == "" {
+		request.Month = periodConvert.Month
+	}
+
+	objectPeriod := domain.InfoPeriod{
+		Month: request.Month,
+		Year:  request.Year,
+	}
+
+	// converter to make jsonb postgres SQL
+	var jsonData, errConv = json.Marshal(objectPeriod)
+
+	if errConv != errConv {
+		return period2.PeriodResponse{}, errConv
+	}
+
+	periodReq := domain.YearPeriod{
+		InfoPeriod: jsonData,
+		Id:         pathId.Id,
+	}
+
+	data, ErrUpdate := service.PeriodRepository.Update(periodReq)
+	if ErrUpdate != nil {
+		return period2.PeriodResponse{}, ErrUpdate
+	}
+
+	return helper.ToPeriodResponse(data), nil
 }
 
 func (service *PeriodServiceImpl) Delete(periodId int) {
@@ -64,4 +102,14 @@ func (service *PeriodServiceImpl) Delete(periodId int) {
 func (service *PeriodServiceImpl) FindAll() []period2.PeriodResponse {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (service *PeriodServiceImpl) FindById(request domain.YearPeriod) (period2.PeriodResponse, error) {
+	data, err := service.PeriodRepository.FindById(request)
+
+	if err != nil {
+		return period2.PeriodResponse{}, err
+	}
+
+	return helper.ToPeriodResponse(data), nil
 }

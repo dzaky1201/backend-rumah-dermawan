@@ -24,8 +24,12 @@ func (repository *PeriodRepositoryImpl) Save(period domain.YearPeriod) (domain.Y
 }
 
 func (repository *PeriodRepositoryImpl) Update(period domain.YearPeriod) (domain.YearPeriod, error) {
-	//TODO implement me
-	panic("implement me")
+	err := repository.db.Model(domain.YearPeriod{}).Where("id = ?", period.Id).Updates(domain.YearPeriod{InfoPeriod: period.InfoPeriod}).Error
+	if err != nil {
+		return period, err
+	}
+
+	return period, nil
 }
 
 func (repository *PeriodRepositoryImpl) Delete(period domain.YearPeriod) {
@@ -36,4 +40,14 @@ func (repository *PeriodRepositoryImpl) Delete(period domain.YearPeriod) {
 func (repository *PeriodRepositoryImpl) FindAll() []domain.YearPeriod {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (repository *PeriodRepositoryImpl) FindById(period domain.YearPeriod) (domain.YearPeriod, error) {
+	var dataPeriod domain.YearPeriod
+	err := repository.db.First(&dataPeriod, period.Id).Error
+	if err != nil {
+		return period, err
+	}
+
+	return dataPeriod, nil
 }

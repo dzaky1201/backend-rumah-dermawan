@@ -7,4 +7,5 @@ type PeriodController interface {
 	Update(c *gin.Context)
 	Delete(c *gin.Context)
 	FindAll(c *gin.Context)
+	FindById(c *gin.Context)
 }

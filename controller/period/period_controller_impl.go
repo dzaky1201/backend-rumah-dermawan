@@ -4,9 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"rumahdermawan/backedn-rdi/helper"
+	"rumahdermawan/backedn-rdi/model/domain"
 	"rumahdermawan/backedn-rdi/model/web"
 	period2 "rumahdermawan/backedn-rdi/model/web/period"
 	"rumahdermawan/backedn-rdi/service/period"
+	"strconv"
 )
 
 type PeriodControllerImpl struct {
@@ -30,9 +32,21 @@ func (controller *PeriodControllerImpl) Save(c *gin.Context) {
 			Data:   errorMessage,
 		}
 		c.JSON(http.StatusMethodNotAllowed, response)
+		return
 	}
 
-	dataPeriod := controller.periodService.Save(req)
+	dataPeriod, errData := controller.periodService.Save(req)
+
+	if errData != nil {
+		response := web.WebResponse{
+			Code:   http.StatusInternalServerError,
+			Status: errData.Error(),
+			Data:   nil,
+		}
+
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
 
 	response := web.WebResponse{
 		Code:   http.StatusOK,
@@ -44,8 +58,49 @@ func (controller *PeriodControllerImpl) Save(c *gin.Context) {
 }
 
 func (controller *PeriodControllerImpl) Update(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+	var req period2.PeriodCreateRequest
+	pathId := c.Param("id")
+
+	errInput := c.ShouldBindJSON(&req)
+	if errInput != nil {
+		errors := helper.FormatValidationError(errInput)
+		errorMessage := gin.H{"errors": errors}
+		response := web.WebResponse{
+			Code:   http.StatusMethodNotAllowed,
+			Status: "error",
+			Data:   errorMessage,
+		}
+		c.JSON(http.StatusMethodNotAllowed, response)
+		return
+	}
+
+	id, err := strconv.ParseUint(pathId, 10, 32)
+	if err != nil {
+		return
+	}
+
+	requestId := domain.YearPeriod{Id: uint(id)}
+
+	dataPeriod, errData := controller.periodService.Update(req, requestId)
+
+	if errData != nil {
+		response := web.WebResponse{
+			Code:   http.StatusInternalServerError,
+			Status: errData.Error(),
+			Data:   nil,
+		}
+
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response := web.WebResponse{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   dataPeriod,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func (controller *PeriodControllerImpl) Delete(c *gin.Context) {
@@ -56,4 +111,37 @@ func (controller *PeriodControllerImpl) Delete(c *gin.Context) {
 func (controller *PeriodControllerImpl) FindAll(c *gin.Context) {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (controller *PeriodControllerImpl) FindById(c *gin.Context) {
+	// path by url
+	path := c.Param("id")
+
+	// convert path to integer
+	id, err := strconv.ParseUint(path, 10, 32)
+	if err != nil {
+		return
+	}
+
+	request := domain.YearPeriod{Id: uint(id)}
+	getDetail, errData := controller.periodService.FindById(request)
+
+	if errData != nil {
+		response := web.WebResponse{
+			Code:   http.StatusInternalServerError,
+			Status: errData.Error(),
+			Data:   nil,
+		}
+
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response := web.WebResponse{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   getDetail,
+	}
+
+	c.JSON(http.StatusOK, response)
 }

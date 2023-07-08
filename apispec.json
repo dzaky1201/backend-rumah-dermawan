@@ -319,16 +319,6 @@
         "description": "update period",
         "parameters": [
           {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
-          },
-          {
             "in": "path",
             "name": "periodId",
             "description": "period id"

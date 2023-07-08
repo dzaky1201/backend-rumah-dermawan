@@ -84,7 +84,7 @@ func (controller *UserControllerImpl) FindByEmail(c *gin.Context) {
 	if errToken != nil {
 		response := web.WebResponse{
 			Code:   http.StatusMethodNotAllowed,
-			Status: "Register account failed",
+			Status: "Success",
 			Data:   nil,
 		}
 		c.JSON(http.StatusBadRequest, response)
@@ -95,7 +95,7 @@ func (controller *UserControllerImpl) FindByEmail(c *gin.Context) {
 
 	response := web.WebResponse{
 		Code:   http.StatusOK,
-		Status: "Account has been register",
+		Status: "Success",
 		Data:   dataLogin,
 	}
 

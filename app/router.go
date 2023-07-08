@@ -18,8 +18,9 @@ func NewRouter(userController user.UserController, periodController period.Perio
 	api := router.Group("/api/v1")
 	api.POST("/user/register", userController.SaveUser)
 	api.POST("/user/login", userController.FindByEmail)
-	api.POST("/test", userController.TestHitApi)
 	api.POST("/period/create", authMiddleware(token, userService), periodController.Save)
+	api.GET("/period/:id", authMiddleware(token, userService), periodController.FindById)
+	api.PUT("/period/update/:id", authMiddleware(token, userService), periodController.Update)
 
 	return router
 }
