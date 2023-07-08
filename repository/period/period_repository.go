@@ -2,6 +2,7 @@ package period
 
 import (
 	"rumahdermawan/backedn-rdi/model/domain"
+	"rumahdermawan/backedn-rdi/model/web/period"
 )
 
 type PeriodRepository interface {
@@ -9,5 +10,5 @@ type PeriodRepository interface {
 	FindById(period domain.YearPeriod) (domain.YearPeriod, error)
 	Update(period domain.YearPeriod) (domain.YearPeriod, error)
 	Delete(Id int) error
-	FindAll() []domain.YearPeriod
+	FindAll(param period.PeriodQueryParam) ([]domain.YearPeriod, error)
 }

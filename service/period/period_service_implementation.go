@@ -102,9 +102,14 @@ func (service *PeriodServiceImpl) Delete(periodId int) error {
 	return nil
 }
 
-func (service *PeriodServiceImpl) FindAll() []period2.PeriodResponse {
-	//TODO implement me
-	panic("implement me")
+func (service *PeriodServiceImpl) FindAll(page int, limit int) ([]period2.PeriodResponse, error) {
+	param := period2.PeriodQueryParam{Page: page, Limit: limit}
+	data, err := service.PeriodRepository.FindAll(param)
+	if err != nil {
+		return helper.ToPeriodResponseList(data), err
+	}
+
+	return helper.ToPeriodResponseList(data), nil
 }
 
 func (service *PeriodServiceImpl) FindById(request domain.YearPeriod) (period2.PeriodResponse, error) {

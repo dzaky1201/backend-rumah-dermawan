@@ -128,8 +128,27 @@ func (controller *PeriodControllerImpl) Delete(c *gin.Context) {
 }
 
 func (controller *PeriodControllerImpl) FindAll(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+	page, _ := strconv.Atoi(c.Query("page"))
+	limit, _ := strconv.Atoi(c.Query("limit"))
+
+	dataList, err := controller.periodService.FindAll(page, limit)
+	if err != nil {
+		response := web.WebResponse{
+			Code:   http.StatusInternalServerError,
+			Status: err.Error(),
+			Data:   nil,
+		}
+
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+	response := web.WebResponse{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   dataList,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func (controller *PeriodControllerImpl) FindById(c *gin.Context) {

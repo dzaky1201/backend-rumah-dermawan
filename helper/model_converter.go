@@ -31,3 +31,11 @@ func ToPeriodResponse(yearModel domain.YearPeriod) period.PeriodResponse {
 		Month: data.Month,
 	}
 }
+
+func ToPeriodResponseList(data []domain.YearPeriod) []period.PeriodResponse {
+	var response []period.PeriodResponse
+	for _, yearPeriod := range data {
+		response = append(response, ToPeriodResponse(yearPeriod))
+	}
+	return response
+}

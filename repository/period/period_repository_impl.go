@@ -3,6 +3,7 @@ package period
 import (
 	"gorm.io/gorm"
 	"rumahdermawan/backedn-rdi/model/domain"
+	"rumahdermawan/backedn-rdi/model/web/period"
 )
 
 type PeriodRepositoryImpl struct {
@@ -42,9 +43,25 @@ func (repository *PeriodRepositoryImpl) Delete(iD int) error {
 	return nil
 }
 
-func (repository *PeriodRepositoryImpl) FindAll() []domain.YearPeriod {
-	//TODO implement me
-	panic("implement me")
+func (repository *PeriodRepositoryImpl) FindAll(param period.PeriodQueryParam) ([]domain.YearPeriod, error) {
+	var periods []domain.YearPeriod
+	if param.Page == 0 {
+		param.Page = 1
+	}
+	switch {
+	case param.Limit > 20:
+		param.Limit = 20
+	case param.Limit <= 0:
+		param.Limit = 10
+	}
+	offset := (param.Page - 1) * param.Limit
+	err := repository.db.Limit(param.Limit).Offset(offset).Find(&periods).Error
+
+	if err != nil {
+		return periods, err
+	}
+
+	return periods, nil
 }
 
 func (repository *PeriodRepositoryImpl) FindById(period domain.YearPeriod) (domain.YearPeriod, error) {
