@@ -9,6 +9,6 @@ type PeriodService interface {
 	Save(request period.PeriodCreateRequest) (period.PeriodResponse, error)
 	Update(request period.PeriodCreateRequest, pathId domain.YearPeriod) (period.PeriodResponse, error)
 	FindById(request domain.YearPeriod) (period.PeriodResponse, error)
-	Delete(periodId int)
+	Delete(periodId int) error
 	FindAll() []period.PeriodResponse
 }

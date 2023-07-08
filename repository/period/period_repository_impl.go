@@ -32,9 +32,14 @@ func (repository *PeriodRepositoryImpl) Update(period domain.YearPeriod) (domain
 	return period, nil
 }
 
-func (repository *PeriodRepositoryImpl) Delete(period domain.YearPeriod) {
-	//TODO implement me
-	panic("implement me")
+func (repository *PeriodRepositoryImpl) Delete(iD int) error {
+	err := repository.db.Delete(&domain.YearPeriod{}, iD).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (repository *PeriodRepositoryImpl) FindAll() []domain.YearPeriod {

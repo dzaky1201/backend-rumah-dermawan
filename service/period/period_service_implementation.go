@@ -94,9 +94,12 @@ func (service *PeriodServiceImpl) Update(request period2.PeriodCreateRequest, pa
 	return helper.ToPeriodResponse(data), nil
 }
 
-func (service *PeriodServiceImpl) Delete(periodId int) {
-	//TODO implement me
-	panic("implement me")
+func (service *PeriodServiceImpl) Delete(periodId int) error {
+	err := service.PeriodRepository.Delete(periodId)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (service *PeriodServiceImpl) FindAll() []period2.PeriodResponse {

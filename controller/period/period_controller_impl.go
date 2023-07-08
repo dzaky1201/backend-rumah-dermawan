@@ -104,8 +104,27 @@ func (controller *PeriodControllerImpl) Update(c *gin.Context) {
 }
 
 func (controller *PeriodControllerImpl) Delete(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+	path, _ := strconv.Atoi(c.Param("id"))
+	err := controller.periodService.Delete(path)
+	if err != nil {
+		response := web.WebResponse{
+			Code:   http.StatusInternalServerError,
+			Status: err.Error(),
+			Data:   nil,
+		}
+
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response := web.WebResponse{
+		Code:   http.StatusOK,
+		Status: "delete Success",
+		Data:   nil,
+	}
+
+	c.JSON(http.StatusOK, response)
+
 }
 
 func (controller *PeriodControllerImpl) FindAll(c *gin.Context) {

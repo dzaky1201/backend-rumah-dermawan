@@ -34,9 +34,20 @@ func (controller *UserControllerImpl) SaveUser(c *gin.Context) {
 			Data:   errorMessage,
 		}
 		c.JSON(http.StatusMethodNotAllowed, response)
+		return
 	}
 
-	dataRegister := controller.userService.SaveUser(request, "")
+	dataRegister, errRegister := controller.userService.SaveUser(request, "")
+
+	if errRegister != nil {
+		response := web.WebResponse{
+			Code:   http.StatusMethodNotAllowed,
+			Status: "error",
+			Data:   errRegister,
+		}
+		c.JSON(http.StatusMethodNotAllowed, response)
+		return
+	}
 
 	tokenUser, errToken := controller.userToken.GenerateToken(dataRegister.Id)
 
@@ -71,20 +82,31 @@ func (controller *UserControllerImpl) FindByEmail(c *gin.Context) {
 		errorMessage := gin.H{"errors": errors}
 		response := web.WebResponse{
 			Code:   http.StatusMethodNotAllowed,
-			Status: "error",
+			Status: errInput.Error(),
 			Data:   errorMessage,
 		}
 		c.JSON(http.StatusMethodNotAllowed, response)
+		return
 	}
 
-	dataLogin := controller.userService.FindByEmail(request, "")
+	dataLogin, errLogin := controller.userService.FindByEmail(request, "")
+
+	if errLogin != nil {
+		response := web.WebResponse{
+			Code:   http.StatusMethodNotAllowed,
+			Status: errLogin.Error(),
+			Data:   errLogin,
+		}
+		c.JSON(http.StatusMethodNotAllowed, response)
+		return
+	}
 
 	tokenUser, errToken := controller.userToken.GenerateToken(dataLogin.Id)
 
 	if errToken != nil {
 		response := web.WebResponse{
 			Code:   http.StatusMethodNotAllowed,
-			Status: "Success",
+			Status: errToken.Error(),
 			Data:   nil,
 		}
 		c.JSON(http.StatusBadRequest, response)

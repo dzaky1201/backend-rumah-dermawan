@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
 	"rumahdermawan/backedn-rdi/helper"
@@ -18,12 +19,16 @@ func NewUserService(repository user.UserRepository, validate *validator.Validate
 	return &UserServiceImpl{repository: repository, Validate: validate}
 }
 
-func (service *UserServiceImpl) SaveUser(request user2.UserCreateRequest, token string) user2.UserResponse {
+func (service *UserServiceImpl) SaveUser(request user2.UserCreateRequest, token string) (user2.UserResponse, error) {
 	err := service.Validate.Struct(request)
-	helper.PanicIfError(err)
+	if err != nil {
+		return user2.UserResponse{}, err
+	}
 
 	passwordHash, errPass := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.MinCost)
-	helper.PanicIfError(errPass)
+	if err != nil {
+		return user2.UserResponse{}, errPass
+	}
 
 	userReq := domain.User{
 		Name:     request.Name,
@@ -33,18 +38,26 @@ func (service *UserServiceImpl) SaveUser(request user2.UserCreateRequest, token 
 
 	userRes, _ := service.repository.SaveUser(userReq)
 
-	return helper.ToUserResponse(userRes, token)
+	return helper.ToUserResponse(userRes, token), nil
 
 }
 
-func (service *UserServiceImpl) FindByEmail(request user2.UserLoginRequest, token string) user2.UserResponse {
+func (service *UserServiceImpl) FindByEmail(request user2.UserLoginRequest, token string) (user2.UserResponse, error) {
 	userLogin, err := service.repository.FindByEmail(request.Email)
-	helper.PanicIfError(err)
+	if err != nil {
+		return user2.UserResponse{}, err
+	}
+
+	if userLogin.Id == 0 {
+		return user2.UserResponse{}, errors.New("no User Found on that email")
+	}
 
 	errPass := bcrypt.CompareHashAndPassword([]byte(userLogin.Password), []byte(request.Password))
-	helper.PanicIfError(errPass)
+	if err != nil {
+		return user2.UserResponse{}, errPass
+	}
 
-	return helper.ToUserResponse(userLogin, token)
+	return helper.ToUserResponse(userLogin, token), nil
 }
 
 func (service *UserServiceImpl) FindById(Id uint) user2.UserResponse {

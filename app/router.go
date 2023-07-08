@@ -21,6 +21,7 @@ func NewRouter(userController user.UserController, periodController period.Perio
 	api.POST("/period/create", authMiddleware(token, userService), periodController.Save)
 	api.GET("/period/:id", authMiddleware(token, userService), periodController.FindById)
 	api.PUT("/period/update/:id", authMiddleware(token, userService), periodController.Update)
+	api.DELETE("/period/delete/:id", authMiddleware(token, userService), periodController.Delete)
 
 	return router
 }

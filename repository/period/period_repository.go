@@ -8,6 +8,6 @@ type PeriodRepository interface {
 	Save(period domain.YearPeriod) (domain.YearPeriod, error)
 	FindById(period domain.YearPeriod) (domain.YearPeriod, error)
 	Update(period domain.YearPeriod) (domain.YearPeriod, error)
-	Delete(period domain.YearPeriod)
+	Delete(Id int) error
 	FindAll() []domain.YearPeriod
 }
