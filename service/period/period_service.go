@@ -10,5 +10,5 @@ type PeriodService interface {
 	Update(request period.PeriodCreateRequest, pathId domain.YearPeriod) (period.PeriodResponse, error)
 	FindById(request domain.YearPeriod) (period.PeriodResponse, error)
 	Delete(periodId int) error
-	FindAll(page int, limit int) ([]period.PeriodResponse, error)
+	FindAll(page int, limit int, year string) ([]period.PeriodResponse, error)
 }

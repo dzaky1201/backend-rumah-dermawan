@@ -130,8 +130,9 @@ func (controller *PeriodControllerImpl) Delete(c *gin.Context) {
 func (controller *PeriodControllerImpl) FindAll(c *gin.Context) {
 	page, _ := strconv.Atoi(c.Query("page"))
 	limit, _ := strconv.Atoi(c.Query("limit"))
+	year := c.Query("year")
 
-	dataList, err := controller.periodService.FindAll(page, limit)
+	dataList, err := controller.periodService.FindAll(page, limit, year)
 	if err != nil {
 		response := web.WebResponse{
 			Code:   http.StatusInternalServerError,

@@ -102,8 +102,8 @@ func (service *PeriodServiceImpl) Delete(periodId int) error {
 	return nil
 }
 
-func (service *PeriodServiceImpl) FindAll(page int, limit int) ([]period2.PeriodResponse, error) {
-	param := period2.PeriodQueryParam{Page: page, Limit: limit}
+func (service *PeriodServiceImpl) FindAll(page int, limit int, year string) ([]period2.PeriodResponse, error) {
+	param := period2.PeriodQueryParam{Page: page, Limit: limit, Year: year}
 	data, err := service.PeriodRepository.FindAll(param)
 	if err != nil {
 		return helper.ToPeriodResponseList(data), err

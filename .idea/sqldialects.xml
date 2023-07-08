@@ -5,5 +5,6 @@
     <file url="file://$PROJECT_DIR$/db/migrations/20230704134254_create_operation_activities_table.up.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/db/migrations/20230704134336_create_invests_activities_table.up.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/db/migrations/20230704134343_create_funding_activities_table.up.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/db/migrations/20230708114940_create_index_for_search_year_in_period.up.sql" dialect="PostgreSQL" />
   </component>
 </project>

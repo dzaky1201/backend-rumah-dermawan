@@ -55,10 +55,17 @@ func (repository *PeriodRepositoryImpl) FindAll(param period.PeriodQueryParam) (
 		param.Limit = 10
 	}
 	offset := (param.Page - 1) * param.Limit
-	err := repository.db.Limit(param.Limit).Offset(offset).Find(&periods).Error
 
-	if err != nil {
-		return periods, err
+	if param.Year != "" {
+		err := repository.db.Raw("select * from year_periods where year_periods.info_period ->> 'Year' @@ to_tsquery(?) offset ? limit ?", param.Year, offset, param.Limit).Scan(&periods).Error
+		if err != nil {
+			return periods, err
+		}
+	} else {
+		err := repository.db.Limit(param.Limit).Offset(offset).Find(&periods).Error
+		if err != nil {
+			return periods, err
+		}
 	}
 
 	return periods, nil
