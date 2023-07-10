@@ -3,6 +3,7 @@ package helper
 import (
 	"encoding/json"
 	"rumahdermawan/backedn-rdi/model/domain"
+	"rumahdermawan/backedn-rdi/model/web/activities"
 	"rumahdermawan/backedn-rdi/model/web/period"
 	"rumahdermawan/backedn-rdi/model/web/user"
 )
@@ -38,4 +39,34 @@ func ToPeriodResponseList(data []domain.YearPeriod) []period.PeriodResponse {
 		response = append(response, ToPeriodResponse(yearPeriod))
 	}
 	return response
+}
+
+func ToOperationActivityResponse(data domain.OperationActivity, period interface{}) activities.ActivityResponse {
+	return activities.ActivityResponse{
+		InputDate:       data.DateNote,
+		Description:     data.Description,
+		Amount:          data.Amount,
+		TypeTransaction: data.TypeTransaction,
+		Period:          period,
+	}
+}
+
+func ToFundingActivityResponse(data domain.FundingActivity, period interface{}) activities.ActivityResponse {
+	return activities.ActivityResponse{
+		InputDate:       data.DateNote,
+		Description:     data.Description,
+		Amount:          data.Amount,
+		TypeTransaction: data.TypeTransaction,
+		Period:          period,
+	}
+}
+
+func ToInvestActivityResponse(data domain.InvestsActivity, period interface{}) activities.ActivityResponse {
+	return activities.ActivityResponse{
+		InputDate:       data.DateNote,
+		Description:     data.Description,
+		Amount:          data.Amount,
+		TypeTransaction: data.TypeTransaction,
+		Period:          period,
+	}
 }

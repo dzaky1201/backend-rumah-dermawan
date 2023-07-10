@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
+	"rumahdermawan/backedn-rdi/controller/activity"
 	"rumahdermawan/backedn-rdi/controller/period"
 	"rumahdermawan/backedn-rdi/controller/user"
 	"rumahdermawan/backedn-rdi/model/web"
@@ -12,7 +13,7 @@ import (
 	"strings"
 )
 
-func NewRouter(userController user.UserController, periodController period.PeriodController, token user.UserToken, userService user2.UserService) *gin.Engine {
+func NewRouter(userController user.UserController, periodController period.PeriodController, activityController activity.ActivityController, token user.UserToken, userService user2.UserService) *gin.Engine {
 	router := gin.Default()
 	router.Use(cors.Default())
 	api := router.Group("/api/v1")
@@ -23,6 +24,7 @@ func NewRouter(userController user.UserController, periodController period.Perio
 	api.PUT("/period/update/:id", authMiddleware(token, userService), periodController.Update)
 	api.DELETE("/period/delete/:id", authMiddleware(token, userService), periodController.Delete)
 	api.GET("/periods", authMiddleware(token, userService), periodController.FindAll)
+	api.POST("/activity/create/:createType", authMiddleware(token, userService), activityController.Save)
 
 	return router
 }

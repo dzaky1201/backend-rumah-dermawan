@@ -8,10 +8,13 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/google/wire"
 	"rumahdermawan/backedn-rdi/app"
+	"rumahdermawan/backedn-rdi/controller/activity"
 	period3 "rumahdermawan/backedn-rdi/controller/period"
 	user3 "rumahdermawan/backedn-rdi/controller/user"
+	"rumahdermawan/backedn-rdi/repository/activities"
 	"rumahdermawan/backedn-rdi/repository/period"
 	"rumahdermawan/backedn-rdi/repository/user"
+	activities2 "rumahdermawan/backedn-rdi/service/activities"
 	period2 "rumahdermawan/backedn-rdi/service/period"
 	user2 "rumahdermawan/backedn-rdi/service/user"
 )
@@ -35,12 +38,22 @@ var periodSet = wire.NewSet(
 	wire.Bind(new(period3.PeriodController), new(*period3.PeriodControllerImpl)),
 )
 
+var activitySet = wire.NewSet(
+	activities.NewActivityRepository,
+	wire.Bind(new(activities.ActivitiyRepository), new(*activities.ActivityRepositoryImpl)),
+	activities2.NewActivityService,
+	wire.Bind(new(activities2.ActivityService), new(*activities2.ActivityServiceImpl)),
+	activity.NewActivityController,
+	wire.Bind(new(activity.ActivityController), new(*activity.ActivityControllerImpl)),
+)
+
 func InitializedServer() *gin.Engine {
 	wire.Build(
 		app.NewDb,
 		validator.New,
 		userSet,
 		periodSet,
+		activitySet,
 		app.NewRouter,
 	)
 	return nil
