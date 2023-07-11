@@ -1,6 +1,7 @@
 package activities
 
 type ActivityResponse struct {
+	ID              int         `json:"id"`
 	InputDate       string      `json:"input_date"`
 	Description     string      `json:"description"`
 	Amount          string      `json:"amount"`

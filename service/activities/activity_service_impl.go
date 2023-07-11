@@ -39,6 +39,10 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 		if errRes != nil {
 			return activities2.ActivityResponse{}, errRes
 		}
+
+		dataPeriod, _ := service.ActivityRepository.FindByIdOperation(int(response.Id))
+		response.YearPeriod = dataPeriod.YearPeriod
+
 		return helper.ToOperationActivityResponse(response, response.YearPeriodId), nil
 	} else if createType == "invest" {
 		createRequest := domain.InvestsActivity{
@@ -52,6 +56,10 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 		if errRes != nil {
 			return activities2.ActivityResponse{}, errRes
 		}
+
+		dataPeriod, _ := service.ActivityRepository.FindByIdInvest(int(response.Id))
+		response.YearPeriod = dataPeriod.YearPeriod
+
 		return helper.ToInvestActivityResponse(response, response.YearPeriodId), nil
 	} else if createType == "funding" {
 		createRequest := domain.FundingActivity{
@@ -65,6 +73,10 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 		if errRes != nil {
 			return activities2.ActivityResponse{}, errRes
 		}
+
+		dataPeriod, _ := service.ActivityRepository.FindByIdFunding(int(response.Id))
+		response.YearPeriod = dataPeriod.YearPeriod
+
 		return helper.ToFundingActivityResponse(response, response.YearPeriodId), nil
 	}
 
@@ -108,6 +120,8 @@ func (service *ActivityServiceImpl) Update(request activities2.ActivityCreateReq
 		if errUpdate != nil {
 			return activities2.ActivityResponse{}, errUpdate
 		}
+		// for show month and year name
+		update.YearPeriod = data.YearPeriod
 
 		return helper.ToOperationActivityResponse(update, update.YearPeriodId), nil
 	}
@@ -147,6 +161,8 @@ func (service *ActivityServiceImpl) Update(request activities2.ActivityCreateReq
 			return activities2.ActivityResponse{}, errUpdate
 		}
 
+		update.YearPeriod = data.YearPeriod
+
 		return helper.ToInvestActivityResponse(update, update.YearPeriodId), nil
 	}
 	if updateType == "funding" {
@@ -184,6 +200,8 @@ func (service *ActivityServiceImpl) Update(request activities2.ActivityCreateReq
 		if errUpdate != nil {
 			return activities2.ActivityResponse{}, errUpdate
 		}
+
+		update.YearPeriod = data.YearPeriod
 
 		return helper.ToFundingActivityResponse(update, update.YearPeriodId), nil
 	}

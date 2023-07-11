@@ -42,31 +42,37 @@ func ToPeriodResponseList(data []domain.YearPeriod) []period.PeriodResponse {
 }
 
 func ToOperationActivityResponse(data domain.OperationActivity, period interface{}) activities.ActivityResponse {
+	dataPeriod := ToPeriodResponse(data.YearPeriod)
 	return activities.ActivityResponse{
+		ID:              int(data.Id),
 		InputDate:       data.DateNote,
 		Description:     data.Description,
 		Amount:          data.Amount,
 		TypeTransaction: data.TypeTransaction,
-		Period:          period,
+		Period:          dataPeriod,
 	}
 }
 
 func ToFundingActivityResponse(data domain.FundingActivity, period interface{}) activities.ActivityResponse {
+	dataPeriod := ToPeriodResponse(data.YearPeriod)
 	return activities.ActivityResponse{
+		ID:              int(data.Id),
 		InputDate:       data.DateNote,
 		Description:     data.Description,
 		Amount:          data.Amount,
 		TypeTransaction: data.TypeTransaction,
-		Period:          period,
+		Period:          dataPeriod,
 	}
 }
 
 func ToInvestActivityResponse(data domain.InvestsActivity, period interface{}) activities.ActivityResponse {
+	dataPeriod := ToPeriodResponse(data.YearPeriod)
 	return activities.ActivityResponse{
+		ID:              int(data.Id),
 		InputDate:       data.DateNote,
 		Description:     data.Description,
 		Amount:          data.Amount,
 		TypeTransaction: data.TypeTransaction,
-		Period:          period,
+		Period:          dataPeriod,
 	}
 }

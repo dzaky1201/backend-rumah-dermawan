@@ -26,7 +26,8 @@ func (repository *ActivityRepositoryImpl) SaveOperation(activity domain.Operatio
 
 func (repository *ActivityRepositoryImpl) FindByIdOperation(Id int) (domain.OperationActivity, error) {
 	var dataOperation domain.OperationActivity
-	err := repository.db.First(&dataOperation, Id).Error
+
+	err := repository.db.Preload("YearPeriod").Where("id = ?", Id).Find(&dataOperation).Error
 	if err != nil {
 		return dataOperation, err
 	}
@@ -70,7 +71,7 @@ func (repository *ActivityRepositoryImpl) SaveFunding(activity domain.FundingAct
 
 func (repository *ActivityRepositoryImpl) FindByIdFunding(Id int) (domain.FundingActivity, error) {
 	var dataFunding domain.FundingActivity
-	err := repository.db.First(&dataFunding, Id).Error
+	err := repository.db.Preload("YearPeriod").Where("id = ?", Id).Find(&dataFunding).Error
 	if err != nil {
 		return dataFunding, err
 	}
@@ -114,7 +115,7 @@ func (repository *ActivityRepositoryImpl) SaveInvest(activity domain.InvestsActi
 
 func (repository *ActivityRepositoryImpl) FindByIdInvest(Id int) (domain.InvestsActivity, error) {
 	var dataInvest domain.InvestsActivity
-	err := repository.db.First(&dataInvest, Id).Error
+	err := repository.db.Preload("YearPeriod").Where("id = ?", Id).Find(&dataInvest).Error
 	if err != nil {
 		return dataInvest, err
 	}
