@@ -24,14 +24,23 @@ func (repository *ActivityRepositoryImpl) SaveOperation(activity domain.Operatio
 	return activity, nil
 }
 
-func (repository *ActivityRepositoryImpl) FindByIdOperation(activity domain.OperationActivity) (domain.OperationActivity, error) {
-	//TODO implement me
-	panic("implement me")
+func (repository *ActivityRepositoryImpl) FindByIdOperation(Id int) (domain.OperationActivity, error) {
+	var dataOperation domain.OperationActivity
+	err := repository.db.First(&dataOperation, Id).Error
+	if err != nil {
+		return dataOperation, err
+	}
+
+	return dataOperation, nil
 }
 
 func (repository *ActivityRepositoryImpl) UpdateOperation(activity domain.OperationActivity) (domain.OperationActivity, error) {
-	//TODO implement me
-	panic("implement me")
+	err := repository.db.Model(domain.OperationActivity{}).Where("id = ?", activity.Id).Updates(activity).Error
+	if err != nil {
+		return activity, err
+	}
+
+	return activity, nil
 }
 
 func (repository *ActivityRepositoryImpl) DeleteOperation(Id int) error {
@@ -54,14 +63,23 @@ func (repository *ActivityRepositoryImpl) SaveFunding(activity domain.FundingAct
 	return activity, nil
 }
 
-func (repository *ActivityRepositoryImpl) FindByIdFunding(activity domain.FundingActivity) (domain.FundingActivity, error) {
-	//TODO implement me
-	panic("implement me")
+func (repository *ActivityRepositoryImpl) FindByIdFunding(Id int) (domain.FundingActivity, error) {
+	var dataFunding domain.FundingActivity
+	err := repository.db.First(&dataFunding, Id).Error
+	if err != nil {
+		return dataFunding, err
+	}
+
+	return dataFunding, nil
 }
 
 func (repository *ActivityRepositoryImpl) UpdateFunding(activity domain.FundingActivity) (domain.FundingActivity, error) {
-	//TODO implement me
-	panic("implement me")
+	err := repository.db.Model(domain.FundingActivity{}).Where("id = ?", activity.Id).Updates(activity).Error
+	if err != nil {
+		return activity, err
+	}
+
+	return activity, nil
 }
 
 func (repository *ActivityRepositoryImpl) DeleteFunding(Id int) error {
@@ -84,14 +102,23 @@ func (repository *ActivityRepositoryImpl) SaveInvest(activity domain.InvestsActi
 	return activity, nil
 }
 
-func (repository *ActivityRepositoryImpl) FindByIdInvest(activity domain.InvestsActivity) (domain.InvestsActivity, error) {
-	//TODO implement me
-	panic("implement me")
+func (repository *ActivityRepositoryImpl) FindByIdInvest(Id int) (domain.InvestsActivity, error) {
+	var dataInvest domain.InvestsActivity
+	err := repository.db.First(&dataInvest, Id).Error
+	if err != nil {
+		return dataInvest, err
+	}
+
+	return dataInvest, nil
 }
 
 func (repository *ActivityRepositoryImpl) UpdateInvest(activity domain.InvestsActivity) (domain.InvestsActivity, error) {
-	//TODO implement me
-	panic("implement me")
+	err := repository.db.Model(domain.InvestsActivity{}).Where("id = ?", activity.Id).Updates(activity).Error
+	if err != nil {
+		return activity, err
+	}
+
+	return activity, nil
 }
 
 func (repository *ActivityRepositoryImpl) DeleteInvest(Id int) error {

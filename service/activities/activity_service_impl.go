@@ -5,7 +5,6 @@ import (
 	"rumahdermawan/backedn-rdi/helper"
 	"rumahdermawan/backedn-rdi/model/domain"
 	activities2 "rumahdermawan/backedn-rdi/model/web/activities"
-	"rumahdermawan/backedn-rdi/model/web/period"
 	"rumahdermawan/backedn-rdi/repository/activities"
 )
 
@@ -73,22 +72,102 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 
 }
 
-func (service *ActivityServiceImpl) Update(request activities2.ActivityCreateRequest, pathId int) (activities2.ActivityResponse, error) {
+func (service *ActivityServiceImpl) Update(request activities2.ActivityCreateRequest, pathId int, updateType string) (activities2.ActivityResponse, error) {
+	if updateType == "operation" {
+		data, err := service.ActivityRepository.FindByIdOperation(pathId)
+		if err != nil {
+			return activities2.ActivityResponse{}, err
+		}
+
+		data.Amount = request.Amount
+		data.Description = request.Description
+		data.PeriodeID = request.PeriodID
+		data.TypeTransaction = request.TypeTransaction
+		data.DateNote = request.InputDate
+
+		update, errUpdate := service.ActivityRepository.UpdateOperation(data)
+		if errUpdate != nil {
+			return activities2.ActivityResponse{}, errUpdate
+		}
+
+		return helper.ToOperationActivityResponse(update, update.PeriodeID), nil
+	} else if updateType == "invest" {
+		data, err := service.ActivityRepository.FindByIdInvest(pathId)
+		if err != nil {
+			return activities2.ActivityResponse{}, err
+		}
+
+		data.Amount = request.Amount
+		data.Description = request.Description
+		data.PeriodeID = request.PeriodID
+		data.TypeTransaction = request.TypeTransaction
+		data.DateNote = request.InputDate
+
+		update, errUpdate := service.ActivityRepository.UpdateInvest(data)
+		if errUpdate != nil {
+			return activities2.ActivityResponse{}, errUpdate
+		}
+
+		return helper.ToInvestActivityResponse(update, update.PeriodeID), nil
+	} else if updateType == "funding" {
+		data, err := service.ActivityRepository.FindByIdFunding(pathId)
+		if err != nil {
+			return activities2.ActivityResponse{}, err
+		}
+
+		data.Amount = request.Amount
+		data.Description = request.Description
+		data.PeriodeID = request.PeriodID
+		data.TypeTransaction = request.TypeTransaction
+		data.DateNote = request.InputDate
+
+		update, errUpdate := service.ActivityRepository.UpdateFunding(data)
+		if errUpdate != nil {
+			return activities2.ActivityResponse{}, errUpdate
+		}
+
+		return helper.ToFundingActivityResponse(update, update.PeriodeID), nil
+	}
+
+	return activities2.ActivityResponse{}, nil
+}
+
+func (service *ActivityServiceImpl) FindById(activityId int, findType string) (activities2.ActivityResponse, error) {
+	if findType == "operation" {
+		data, err := service.ActivityRepository.FindByIdOperation(activityId)
+
+		if err != nil {
+			return activities2.ActivityResponse{}, err
+		}
+
+		return helper.ToOperationActivityResponse(data, data.PeriodeID), nil
+	} else if findType == "invest" {
+		data, err := service.ActivityRepository.FindByIdInvest(activityId)
+
+		if err != nil {
+			return activities2.ActivityResponse{}, err
+		}
+
+		return helper.ToInvestActivityResponse(data, data.PeriodeID), nil
+	} else if findType == "funding" {
+		data, err := service.ActivityRepository.FindByIdFunding(activityId)
+
+		if err != nil {
+			return activities2.ActivityResponse{}, err
+		}
+
+		return helper.ToFundingActivityResponse(data, data.PeriodeID), nil
+	}
+
+	return activities2.ActivityResponse{}, nil
+}
+
+func (service *ActivityServiceImpl) Delete(activityId int, deleteType string) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (service *ActivityServiceImpl) FindById(request int) (period.PeriodResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (service *ActivityServiceImpl) Delete(activityId int) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (service *ActivityServiceImpl) FindAll(page int, limit int, year string, month string) ([]activities2.ActivityResponse, error) {
+func (service *ActivityServiceImpl) FindAll(page int, limit int, year string, month string, findAllType string) ([]activities2.ActivityResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
