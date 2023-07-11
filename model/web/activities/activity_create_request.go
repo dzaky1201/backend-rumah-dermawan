@@ -5,5 +5,5 @@ type ActivityCreateRequest struct {
 	Description     string `validate:"required" json:"description"`
 	Amount          string `validate:"required" json:"amount"`
 	TypeTransaction string `validate:"required" json:"type_transaction"`
-	PeriodID        uint   `validate:"required" json:"period_id"`
+	YearPeriodId    uint   `validate:"required" json:"year_period_id"`
 }

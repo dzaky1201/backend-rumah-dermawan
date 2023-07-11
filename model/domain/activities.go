@@ -6,7 +6,7 @@ type OperationActivity struct {
 	Description     string
 	Amount          string
 	TypeTransaction string
-	PeriodeID       uint
+	YearPeriodId    uint
 }
 
 type FundingActivity struct {
@@ -15,7 +15,7 @@ type FundingActivity struct {
 	Description     string
 	Amount          string
 	TypeTransaction string
-	PeriodeID       uint
+	YearPeriodId    uint
 }
 type InvestsActivity struct {
 	Id              uint
@@ -23,5 +23,5 @@ type InvestsActivity struct {
 	Description     string
 	Amount          string
 	TypeTransaction string
-	PeriodeID       uint
+	YearPeriodId    uint
 }
