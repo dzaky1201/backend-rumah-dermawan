@@ -16,6 +16,7 @@ import (
 func NewRouter(userController user.UserController, periodController period.PeriodController, activityController activity.ActivityController, token user.UserToken, userService user2.UserService) *gin.Engine {
 	router := gin.Default()
 	router.Use(cors.Default())
+
 	api := router.Group("/api/v1")
 	api.POST("/user/register", userController.SaveUser)
 	api.POST("/user/login", userController.FindByEmail)
@@ -27,6 +28,7 @@ func NewRouter(userController user.UserController, periodController period.Perio
 	api.POST("/activity/create/:createType", authMiddleware(token, userService), activityController.Save)
 	api.PUT("/activity/update/:updateType/:id", authMiddleware(token, userService), activityController.Update)
 	api.GET("/activity/:findType/:id", authMiddleware(token, userService), activityController.FindById)
+	api.DELETE("/activity/delete/:deleteType/:id", authMiddleware(token, userService), activityController.Delete)
 
 	return router
 }

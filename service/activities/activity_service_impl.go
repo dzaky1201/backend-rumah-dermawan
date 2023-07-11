@@ -163,8 +163,29 @@ func (service *ActivityServiceImpl) FindById(activityId int, findType string) (a
 }
 
 func (service *ActivityServiceImpl) Delete(activityId int, deleteType string) error {
-	//TODO implement me
-	panic("implement me")
+
+	if deleteType == "operation" {
+		err := service.ActivityRepository.DeleteOperation(activityId)
+		if err != nil {
+			return err
+		}
+		return nil
+	} else if deleteType == "invest" {
+		err := service.ActivityRepository.DeleteInvest(activityId)
+		if err != nil {
+			return err
+		}
+		return nil
+	} else if deleteType == "funding" {
+		err := service.ActivityRepository.DeleteFunding(activityId)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	return nil
+
 }
 
 func (service *ActivityServiceImpl) FindAll(page int, limit int, year string, month string, findAllType string) ([]activities2.ActivityResponse, error) {

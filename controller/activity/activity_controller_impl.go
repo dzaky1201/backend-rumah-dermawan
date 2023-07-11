@@ -99,8 +99,27 @@ func (controller *ActivityControllerImpl) Update(c *gin.Context) {
 }
 
 func (controller *ActivityControllerImpl) Delete(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+	pathId, _ := strconv.Atoi(c.Param("id"))
+	deleteType := c.Param("deleteType")
+	err := controller.service.Delete(pathId, deleteType)
+	if err != nil {
+		response := web.WebResponse{
+			Code:   http.StatusInternalServerError,
+			Status: err.Error(),
+			Data:   nil,
+		}
+
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response := web.WebResponse{
+		Code:   http.StatusOK,
+		Status: "delete Success",
+		Data:   nil,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func (controller *ActivityControllerImpl) FindAll(c *gin.Context) {

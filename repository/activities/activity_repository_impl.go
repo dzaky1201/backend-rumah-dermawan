@@ -44,8 +44,13 @@ func (repository *ActivityRepositoryImpl) UpdateOperation(activity domain.Operat
 }
 
 func (repository *ActivityRepositoryImpl) DeleteOperation(Id int) error {
-	//TODO implement me
-	panic("implement me")
+	err := repository.db.Delete(&domain.OperationActivity{}, Id).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (repository *ActivityRepositoryImpl) FindAllOperation(param activities.ActivityQueryParam) ([]domain.OperationActivity, error) {
@@ -83,8 +88,13 @@ func (repository *ActivityRepositoryImpl) UpdateFunding(activity domain.FundingA
 }
 
 func (repository *ActivityRepositoryImpl) DeleteFunding(Id int) error {
-	//TODO implement me
-	panic("implement me")
+	err := repository.db.Delete(&domain.FundingActivity{}, Id).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (repository *ActivityRepositoryImpl) FindAllFunding(param activities.ActivityQueryParam) ([]domain.FundingActivity, error) {
@@ -122,8 +132,13 @@ func (repository *ActivityRepositoryImpl) UpdateInvest(activity domain.InvestsAc
 }
 
 func (repository *ActivityRepositoryImpl) DeleteInvest(Id int) error {
-	//TODO implement me
-	panic("implement me")
+	err := repository.db.Delete(&domain.InvestsActivity{}, Id).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (repository *ActivityRepositoryImpl) FindAllInvest(param activities.ActivityQueryParam) ([]domain.InvestsActivity, error) {
