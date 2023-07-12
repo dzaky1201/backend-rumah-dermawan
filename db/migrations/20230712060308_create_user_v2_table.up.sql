@@ -6,4 +6,4 @@ create table users
     password   varchar(255) not null,
     created_at timestamp default current_timestamp,
     primary key (id)
-)
+);
