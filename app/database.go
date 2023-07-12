@@ -19,7 +19,7 @@ func NewDb() *gorm.DB {
 	// dbPort := os.Getenv("DB_PORT")
 	// dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require TimeZone=Asia/Jakarta", dbHost, dbUser, dbPass, dbName, dbPort)
 
-	dsn := "host=127.0.0.1 user=rumahder_admin password=rumahdermawan12 dbname=rumahder_backend port=5432 sslmode=enable TimeZone=Asia/Jakarta"
+	dsn := "host=localhost user=rumahder_admin password=rumahdermawan12 dbname=rumahder_backend port=5432 sslmode=enable TimeZone=Asia/Jakarta"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
