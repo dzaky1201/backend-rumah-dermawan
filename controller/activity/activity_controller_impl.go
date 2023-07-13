@@ -123,8 +123,42 @@ func (controller *ActivityControllerImpl) Delete(c *gin.Context) {
 }
 
 func (controller *ActivityControllerImpl) FindAll(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+	findAllType := c.Param("findAllType")
+	page, _ := strconv.Atoi(c.Query("page"))
+	limit, _ := strconv.Atoi(c.Query("limit"))
+	description := c.Query("description")
+
+	param := activities2.ActivityQueryParam{Page: page, Limit: limit, Description: description}
+
+	dataList, err := controller.service.FindAll(param, findAllType)
+	if err != nil {
+		response := web.WebResponse{
+			Code:   http.StatusInternalServerError,
+			Status: err.Error(),
+			Data:   nil,
+		}
+
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+	if dataList != nil {
+		response := web.WebResponse{
+			Code:   http.StatusOK,
+			Status: "Success",
+			Data:   dataList,
+		}
+		c.JSON(http.StatusOK, response)
+		return
+	} else {
+		response := web.WebResponse{
+			Code:   http.StatusBadRequest,
+			Status: "error",
+			Data:   "not found",
+		}
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
 }
 
 func (controller *ActivityControllerImpl) FindById(c *gin.Context) {

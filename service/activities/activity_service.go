@@ -9,5 +9,5 @@ type ActivityService interface {
 	Update(request activities.ActivityCreateRequest, pathId int, updateType string) (activities.ActivityResponse, error)
 	FindById(activityId int, findType string) (activities.ActivityResponse, error)
 	Delete(activityId int, deleteType string) error
-	FindAll(page int, limit int, year string, month string, findAllType string) ([]activities.ActivityResponse, error)
+	FindAll(param activities.ActivityQueryParam, findAllType string) ([]activities.ActivityResponse, error)
 }

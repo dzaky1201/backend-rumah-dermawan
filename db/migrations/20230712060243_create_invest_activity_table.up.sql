@@ -13,5 +13,4 @@ create table invests_activities
 );
 
 create index desc_invest_search_index on invests_activities using gin (to_tsvector('indonesian', description));
-create index type_transaction_invests_search_index on invests_activities using gin (to_tsvector('indonesian', type_transaction));
 create index date_note_invest_search_index on invests_activities using gin (to_tsvector('indonesian', date_note));

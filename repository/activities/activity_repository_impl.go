@@ -1,6 +1,7 @@
 package activities
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"rumahdermawan/backedn-rdi/model/domain"
 	"rumahdermawan/backedn-rdi/model/web/activities"
@@ -55,8 +56,32 @@ func (repository *ActivityRepositoryImpl) DeleteOperation(Id int) error {
 }
 
 func (repository *ActivityRepositoryImpl) FindAllOperation(param activities.ActivityQueryParam) ([]domain.OperationActivity, error) {
-	//TODO implement me
-	panic("implement me")
+	var operationList []domain.OperationActivity
+	if param.Page == 0 {
+		param.Page = 1
+	}
+	switch {
+	case param.Limit > 20:
+		param.Limit = 20
+	case param.Limit <= 0:
+		param.Limit = 10
+	}
+	offset := (param.Page - 1) * param.Limit
+
+	if param.Description != "" {
+		desc := fmt.Sprintf("'''%s'''", param.Description)
+		err := repository.db.Table("operation_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Find(&operationList).Error
+		if err != nil {
+			return operationList, err
+		}
+	} else {
+		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Find(&operationList).Error
+		if err != nil {
+			return operationList, err
+		}
+	}
+
+	return operationList, nil
 }
 
 func (repository *ActivityRepositoryImpl) SaveFunding(activity domain.FundingActivity) (domain.FundingActivity, error) {
@@ -99,8 +124,32 @@ func (repository *ActivityRepositoryImpl) DeleteFunding(Id int) error {
 }
 
 func (repository *ActivityRepositoryImpl) FindAllFunding(param activities.ActivityQueryParam) ([]domain.FundingActivity, error) {
-	//TODO implement me
-	panic("implement me")
+	var fundingList []domain.FundingActivity
+	if param.Page == 0 {
+		param.Page = 1
+	}
+	switch {
+	case param.Limit > 20:
+		param.Limit = 20
+	case param.Limit <= 0:
+		param.Limit = 10
+	}
+	offset := (param.Page - 1) * param.Limit
+
+	if param.Description != "" {
+		desc := fmt.Sprintf("'''%s'''", param.Description)
+		err := repository.db.Table("funding_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Find(&fundingList).Error
+		if err != nil {
+			return fundingList, err
+		}
+	} else {
+		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Find(&fundingList).Error
+		if err != nil {
+			return fundingList, err
+		}
+	}
+
+	return fundingList, nil
 }
 
 func (repository *ActivityRepositoryImpl) SaveInvest(activity domain.InvestsActivity) (domain.InvestsActivity, error) {
@@ -143,6 +192,30 @@ func (repository *ActivityRepositoryImpl) DeleteInvest(Id int) error {
 }
 
 func (repository *ActivityRepositoryImpl) FindAllInvest(param activities.ActivityQueryParam) ([]domain.InvestsActivity, error) {
-	//TODO implement me
-	panic("implement me")
+	var investList []domain.InvestsActivity
+	if param.Page == 0 {
+		param.Page = 1
+	}
+	switch {
+	case param.Limit > 20:
+		param.Limit = 20
+	case param.Limit <= 0:
+		param.Limit = 10
+	}
+	offset := (param.Page - 1) * param.Limit
+
+	if param.Description != "" {
+		desc := fmt.Sprintf("'''%s'''", param.Description)
+		err := repository.db.Table("invests_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Find(&investList).Error
+		if err != nil {
+			return investList, err
+		}
+	} else {
+		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Find(&investList).Error
+		if err != nil {
+			return investList, err
+		}
+	}
+
+	return investList, nil
 }

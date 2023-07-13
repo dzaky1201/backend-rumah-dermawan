@@ -43,7 +43,7 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 		dataPeriod, _ := service.ActivityRepository.FindByIdOperation(int(response.Id))
 		response.YearPeriod = dataPeriod.YearPeriod
 
-		return helper.ToOperationActivityResponse(response, response.YearPeriodId), nil
+		return helper.ToOperationActivityResponse(response), nil
 	} else if createType == "invest" {
 		createRequest := domain.InvestsActivity{
 			DateNote:        request.InputDate,
@@ -60,7 +60,7 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 		dataPeriod, _ := service.ActivityRepository.FindByIdInvest(int(response.Id))
 		response.YearPeriod = dataPeriod.YearPeriod
 
-		return helper.ToInvestActivityResponse(response, response.YearPeriodId), nil
+		return helper.ToInvestActivityResponse(response), nil
 	} else if createType == "funding" {
 		createRequest := domain.FundingActivity{
 			DateNote:        request.InputDate,
@@ -77,7 +77,7 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 		dataPeriod, _ := service.ActivityRepository.FindByIdFunding(int(response.Id))
 		response.YearPeriod = dataPeriod.YearPeriod
 
-		return helper.ToFundingActivityResponse(response, response.YearPeriodId), nil
+		return helper.ToFundingActivityResponse(response), nil
 	}
 
 	return activities2.ActivityResponse{}, nil
@@ -123,7 +123,7 @@ func (service *ActivityServiceImpl) Update(request activities2.ActivityCreateReq
 		// for show month and year name
 		update.YearPeriod = data.YearPeriod
 
-		return helper.ToOperationActivityResponse(update, update.YearPeriodId), nil
+		return helper.ToOperationActivityResponse(update), nil
 	}
 	if updateType == "invest" {
 		data, err := service.ActivityRepository.FindByIdInvest(pathId)
@@ -163,7 +163,7 @@ func (service *ActivityServiceImpl) Update(request activities2.ActivityCreateReq
 
 		update.YearPeriod = data.YearPeriod
 
-		return helper.ToInvestActivityResponse(update, update.YearPeriodId), nil
+		return helper.ToInvestActivityResponse(update), nil
 	}
 	if updateType == "funding" {
 		data, err := service.ActivityRepository.FindByIdFunding(pathId)
@@ -203,7 +203,7 @@ func (service *ActivityServiceImpl) Update(request activities2.ActivityCreateReq
 
 		update.YearPeriod = data.YearPeriod
 
-		return helper.ToFundingActivityResponse(update, update.YearPeriodId), nil
+		return helper.ToFundingActivityResponse(update), nil
 	}
 
 	return activities2.ActivityResponse{}, nil
@@ -217,7 +217,7 @@ func (service *ActivityServiceImpl) FindById(activityId int, findType string) (a
 			return activities2.ActivityResponse{}, err
 		}
 
-		return helper.ToOperationActivityResponse(data, data.YearPeriodId), nil
+		return helper.ToOperationActivityResponse(data), nil
 	} else if findType == "invest" {
 		data, err := service.ActivityRepository.FindByIdInvest(activityId)
 
@@ -225,7 +225,7 @@ func (service *ActivityServiceImpl) FindById(activityId int, findType string) (a
 			return activities2.ActivityResponse{}, err
 		}
 
-		return helper.ToInvestActivityResponse(data, data.YearPeriodId), nil
+		return helper.ToInvestActivityResponse(data), nil
 	} else if findType == "funding" {
 		data, err := service.ActivityRepository.FindByIdFunding(activityId)
 
@@ -233,7 +233,7 @@ func (service *ActivityServiceImpl) FindById(activityId int, findType string) (a
 			return activities2.ActivityResponse{}, err
 		}
 
-		return helper.ToFundingActivityResponse(data, data.YearPeriodId), nil
+		return helper.ToFundingActivityResponse(data), nil
 	}
 
 	return activities2.ActivityResponse{}, nil
@@ -265,7 +265,30 @@ func (service *ActivityServiceImpl) Delete(activityId int, deleteType string) er
 
 }
 
-func (service *ActivityServiceImpl) FindAll(page int, limit int, year string, month string, findAllType string) ([]activities2.ActivityResponse, error) {
-	//TODO implement me
-	panic("implement me")
+func (service *ActivityServiceImpl) FindAll(param activities2.ActivityQueryParam, findAllType string) ([]activities2.ActivityResponse, error) {
+	switch {
+	case findAllType == "operation":
+		data, err := service.ActivityRepository.FindAllOperation(param)
+		if err != nil {
+			return helper.ToOperationActivityResponseList(data), err
+		}
+
+		return helper.ToOperationActivityResponseList(data), nil
+	case findAllType == "funding":
+		data, err := service.ActivityRepository.FindAllFunding(param)
+		if err != nil {
+			return helper.ToFundingActivityResponseList(data), err
+		}
+
+		return helper.ToFundingActivityResponseList(data), nil
+	case findAllType == "invest":
+		data, err := service.ActivityRepository.FindAllInvest(param)
+		if err != nil {
+			return helper.ToInvestActivityResponseList(data), err
+		}
+
+		return helper.ToInvestActivityResponseList(data), nil
+	}
+
+	return []activities2.ActivityResponse{}, nil
 }

@@ -41,7 +41,7 @@ func ToPeriodResponseList(data []domain.YearPeriod) []period.PeriodResponse {
 	return response
 }
 
-func ToOperationActivityResponse(data domain.OperationActivity, period interface{}) activities.ActivityResponse {
+func ToOperationActivityResponse(data domain.OperationActivity) activities.ActivityResponse {
 	dataPeriod := ToPeriodResponse(data.YearPeriod)
 	return activities.ActivityResponse{
 		ID:              int(data.Id),
@@ -53,7 +53,15 @@ func ToOperationActivityResponse(data domain.OperationActivity, period interface
 	}
 }
 
-func ToFundingActivityResponse(data domain.FundingActivity, period interface{}) activities.ActivityResponse {
+func ToOperationActivityResponseList(data []domain.OperationActivity) []activities.ActivityResponse {
+	var response []activities.ActivityResponse
+	for _, responseList := range data {
+		response = append(response, ToOperationActivityResponse(responseList))
+	}
+	return response
+}
+
+func ToFundingActivityResponse(data domain.FundingActivity) activities.ActivityResponse {
 	dataPeriod := ToPeriodResponse(data.YearPeriod)
 	return activities.ActivityResponse{
 		ID:              int(data.Id),
@@ -65,7 +73,15 @@ func ToFundingActivityResponse(data domain.FundingActivity, period interface{}) 
 	}
 }
 
-func ToInvestActivityResponse(data domain.InvestsActivity, period interface{}) activities.ActivityResponse {
+func ToFundingActivityResponseList(data []domain.FundingActivity) []activities.ActivityResponse {
+	var response []activities.ActivityResponse
+	for _, responseList := range data {
+		response = append(response, ToFundingActivityResponse(responseList))
+	}
+	return response
+}
+
+func ToInvestActivityResponse(data domain.InvestsActivity) activities.ActivityResponse {
 	dataPeriod := ToPeriodResponse(data.YearPeriod)
 	return activities.ActivityResponse{
 		ID:              int(data.Id),
@@ -75,4 +91,12 @@ func ToInvestActivityResponse(data domain.InvestsActivity, period interface{}) a
 		TypeTransaction: data.TypeTransaction,
 		Period:          dataPeriod,
 	}
+}
+
+func ToInvestActivityResponseList(data []domain.InvestsActivity) []activities.ActivityResponse {
+	var response []activities.ActivityResponse
+	for _, responseList := range data {
+		response = append(response, ToInvestActivityResponse(responseList))
+	}
+	return response
 }

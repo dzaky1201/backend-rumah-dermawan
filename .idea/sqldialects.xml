@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/db/migrations/20230712060147_create_year_table.down.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/db/migrations/20230712060147_create_year_table.up.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/db/migrations/20230712060232_create_operation_activity_table.up.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/db/migrations/20230712060243_create_invest_activity_table.down.sql" dialect="PostgreSQL" />

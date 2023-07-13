@@ -20,15 +20,18 @@ func NewRouter(userController user.UserController, periodController period.Perio
 	api := router.Group("/api/v1")
 	api.POST("/user/register", userController.SaveUser)
 	api.POST("/user/login", userController.FindByEmail)
+
 	api.POST("/period/create", authMiddleware(token, userService), periodController.Save)
 	api.GET("/period/:id", authMiddleware(token, userService), periodController.FindById)
 	api.PUT("/period/update/:id", authMiddleware(token, userService), periodController.Update)
 	api.DELETE("/period/delete/:id", authMiddleware(token, userService), periodController.Delete)
 	api.GET("/periods", authMiddleware(token, userService), periodController.FindAll)
+
 	api.POST("/activity/create/:createType", authMiddleware(token, userService), activityController.Save)
 	api.PUT("/activity/update/:updateType/:id", authMiddleware(token, userService), activityController.Update)
 	api.GET("/activity/:findType/:id", authMiddleware(token, userService), activityController.FindById)
 	api.DELETE("/activity/delete/:deleteType/:id", authMiddleware(token, userService), activityController.Delete)
+	api.GET("/activity/list/:findAllType", authMiddleware(token, userService), activityController.FindAll)
 
 	return router
 }

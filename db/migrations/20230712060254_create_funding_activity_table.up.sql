@@ -13,5 +13,4 @@ create table funding_activities
 );
 
 create index desc_funding_search_index on funding_activities using gin (to_tsvector('indonesian', description));
-create index type_transaction_funding_search_index on funding_activities using gin (to_tsvector('indonesian', type_transaction));
 create index date_note_funding_search_index on funding_activities using gin (to_tsvector('indonesian', date_note));
