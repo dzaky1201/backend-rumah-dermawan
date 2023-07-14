@@ -187,3 +187,37 @@ func (controller *ActivityControllerImpl) FindById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (controller *ActivityControllerImpl) FindReportActivity(c *gin.Context) {
+	year := c.Query("year")
+
+	data, err := controller.service.ReportActivityAll(year)
+	if err != nil {
+		response := web.WebResponse{
+			Code:   http.StatusInternalServerError,
+			Status: err.Error(),
+			Data:   nil,
+		}
+
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	if data != nil {
+		response := web.WebResponse{
+			Code:   http.StatusOK,
+			Status: "Success",
+			Data:   data,
+		}
+		c.JSON(http.StatusOK, response)
+		return
+	} else {
+		response := web.WebResponse{
+			Code:   http.StatusBadRequest,
+			Status: "error",
+			Data:   "not found",
+		}
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+}

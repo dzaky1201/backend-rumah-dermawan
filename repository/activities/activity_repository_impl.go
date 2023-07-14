@@ -219,3 +219,14 @@ func (repository *ActivityRepositoryImpl) FindAllInvest(param activities.Activit
 
 	return investList, nil
 }
+
+func (repository *ActivityRepositoryImpl) ReportActivity(year string) ([]domain.ReportActivity, error) {
+	var allData []domain.ReportActivity
+	errData := repository.db.Raw("select info_period ->> 'Month' as month, sum(case when type_transaction = 'credit' then amount * -1 when type_transaction = 'debit' then amount end) as total from (select * from year_periods join operation_activities oa on year_periods.id = oa.year_period_id union select * from year_periods join invests_activities ia on year_periods.id = ia.year_period_id union select * from year_periods join funding_activities fa on year_periods.id = fa.year_period_id) as all_data where info_period ->> 'Year' = ? group by info_period ->> 'Month'", year).Scan(&allData).Error
+
+	if errData != nil {
+		return []domain.ReportActivity{}, errData
+	}
+
+	return allData, nil
+}

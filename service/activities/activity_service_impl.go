@@ -292,3 +292,11 @@ func (service *ActivityServiceImpl) FindAll(param activities2.ActivityQueryParam
 
 	return []activities2.ActivityResponse{}, nil
 }
+
+func (service *ActivityServiceImpl) ReportActivityAll(year string) ([]activities2.ActivityReportResponse, error) {
+	data, err := service.ActivityRepository.ReportActivity(year)
+	if err != nil {
+		return helper.ToActivityReportResponse(data), err
+	}
+	return helper.ToActivityReportResponse(data), nil
+}

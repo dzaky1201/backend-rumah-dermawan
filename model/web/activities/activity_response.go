@@ -8,3 +8,8 @@ type ActivityResponse struct {
 	TypeTransaction string      `json:"type_transaction"`
 	Period          interface{} `json:"period"`
 }
+
+type ActivityReportResponse struct {
+	Month string `json:"month"`
+	Total string `json:"total"`
+}

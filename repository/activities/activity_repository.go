@@ -23,4 +23,6 @@ type ActivitiyRepository interface {
 	UpdateInvest(activity domain.InvestsActivity) (domain.InvestsActivity, error)
 	DeleteInvest(Id int) error
 	FindAllInvest(param activities.ActivityQueryParam) ([]domain.InvestsActivity, error)
+
+	ReportActivity(year string) ([]domain.ReportActivity, error)
 }

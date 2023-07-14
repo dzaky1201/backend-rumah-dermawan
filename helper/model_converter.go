@@ -100,3 +100,19 @@ func ToInvestActivityResponseList(data []domain.InvestsActivity) []activities.Ac
 	}
 	return response
 }
+
+func ToActivityReportResponseObject(data domain.ReportActivity) activities.ActivityReportResponse {
+	return activities.ActivityReportResponse{
+		Month: data.Month,
+		Total: data.Total,
+	}
+}
+
+func ToActivityReportResponse(data []domain.ReportActivity) []activities.ActivityReportResponse {
+	var response []activities.ActivityReportResponse
+
+	for _, activity := range data {
+		response = append(response, ToActivityReportResponseObject(activity))
+	}
+	return response
+}

@@ -8,4 +8,5 @@ type ActivityController interface {
 	Delete(c *gin.Context)
 	FindAll(c *gin.Context)
 	FindById(c *gin.Context)
+	FindReportActivity(c *gin.Context)
 }
