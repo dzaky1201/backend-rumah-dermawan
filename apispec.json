@@ -8,6 +8,9 @@
   "servers": [
     {
       "url": "https://rumah-dermawan-backend-6d8a2add9817.herokuapp.com/api/v1"
+    },
+    {
+      "url": "http://localhost:8080/api/v1"
     }
   ],
   "paths": {
@@ -522,7 +525,7 @@
         }
       }
     },
-    "/operation/create": {
+    "/activity/create/{createType}": {
       "post": {
         "tags": [
           "operation activity"
@@ -532,17 +535,13 @@
             "bearerAuth": []
           }
         ],
-        "description": "insert operation",
+        "description": "insert activity",
         "parameters": [
           {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
+            "in": "path",
+            "name": "createType",
+            "description": "create type",
+            "example": "operation"
           }
         ],
         "requestBody": {
@@ -550,7 +549,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/object activity"
+                "$ref": "#/components/schemas/request object activity"
               }
             }
           }
@@ -628,7 +627,7 @@
         }
       }
     },
-    "/operation/{operationId}": {
+    "/activity/update/{updateType}/{id}": {
       "put": {
         "tags": [
           "operation activity"
@@ -638,23 +637,129 @@
             "bearerAuth": []
           }
         ],
-        "summary": "update operation activity",
-        "description": "operation activity",
+        "summary": "update activity",
+        "description": "activity",
         "parameters": [
           {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
+            "in": "path",
+            "name": "updateTyoe",
+            "description": "update type",
+            "example": "operation"
           },
           {
             "in": "path",
-            "name": "operationId",
-            "description": "operation id"
+            "name": "id",
+            "description": "id",
+            "example": "1"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/request object activity"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success update operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": "200"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/object activity"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "input not valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 405
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "input not valid !"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error to update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "update failed, please try again !"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/activity/{findType}/{id}": {
+      "get": {
+        "tags": [
+          "operation activity"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "get detail activity",
+        "description": "get detail activity",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "findType",
+            "description": "find type",
+            "example": "operation"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id",
+            "example": "1"
           }
         ],
         "requestBody": {
@@ -738,7 +843,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/activity/delete/{deleteType}/{id}": {
       "delete": {
         "tags": [
           "operation activity"
@@ -748,28 +855,25 @@
             "bearerAuth": []
           }
         ],
-        "summary": "delete period",
-        "description": "update period",
+        "summary": "delete activity",
+        "description": "delete activity",
         "parameters": [
           {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
+            "in": "path",
+            "name": "deleteType",
+            "description": "find type",
+            "example": "operation"
           },
           {
             "in": "path",
-            "name": "operationId",
-            "description": "operation id"
+            "name": "id",
+            "description": "id",
+            "example": "1"
           }
         ],
         "responses": {
           "200": {
-            "description": "success delete",
+            "description": "success update operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -781,7 +885,56 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "success"
+                      "example": "delete success"
+                    },
+                    "data": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "input not valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 405
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "input not valid !"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error to update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "update failed, please try again !"
+                    },
+                    "data": {
+                      "type": "object"
                     }
                   }
                 }
@@ -791,7 +944,7 @@
         }
       }
     },
-    "/operations?page={page}&limit={limit}": {
+    "/activity/list/{findAllType}?page={page}&limit={limit}&description={description}": {
       "get": {
         "tags": [
           "operation activity"
@@ -817,6 +970,14 @@
               "type": "integer"
             },
             "description": "limit"
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "schema": {
+              "type": "string"
+            },
+            "description": "description"
           }
         ],
         "description": "get all data operations with paging",
@@ -858,279 +1019,10 @@
         }
       }
     },
-    "/investation/create": {
-      "post": {
-        "tags": [
-          "investation activity"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "description": "insert investation",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/object activity"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "success create operation activity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "success"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/object activity"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "input not valid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 405
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "input not valid !"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "error to create investation activity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 400
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "create failed, please try again !"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/investation/{investationId}": {
-      "put": {
-        "tags": [
-          "investation activity"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "update investation activity",
-        "description": "investation activity",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
-          },
-          {
-            "in": "path",
-            "name": "investationId",
-            "description": "investation id"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/object activity"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "success update investation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": "200"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "success"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/object activity"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "input not valid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 405
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "input not valid !"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "error to update",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 400
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "update failed, please try again !"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "investation activity"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "delete period",
-        "description": "update period",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
-          },
-          {
-            "in": "path",
-            "name": "fundingId",
-            "description": "funding id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "success delete",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": "200"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "success"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/investation?page={page}&limit={limit}": {
+    "/activity/report?year={year}": {
       "get": {
         "tags": [
-          "investation activity"
+          "operation activity"
         ],
         "security": [
           {
@@ -1139,36 +1031,18 @@
         ],
         "parameters": [
           {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
-          },
-          {
             "in": "query",
-            "name": "page",
+            "name": "year",
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
-            "description": "page"
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "integer"
-            },
-            "description": "limit"
+            "description": "year"
           }
         ],
-        "description": "get all data investation with paging",
+        "description": "get all data report",
         "responses": {
           "200": {
-            "description": "Success get all investation",
+            "description": "Success get all operations",
             "content": {
               "application/json": {
                 "schema": {
@@ -1182,364 +1056,10 @@
                       "type": "string",
                       "example": "success"
                     },
-                    "page": {
-                      "type": "string",
-                      "example": "1"
-                    },
-                    "limit": {
-                      "type": "string",
-                      "example": "10"
-                    },
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/object activity"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/funding/create": {
-      "post": {
-        "tags": [
-          "funding activity"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "description": "insert funding",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/object activity"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "success create operation activity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "success"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/object activity"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "input not valid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 405
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "input not valid !"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "error to create funding activity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 400
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "create failed, please try again !"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/funding/{fundingId}": {
-      "put": {
-        "tags": [
-          "funding activity"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "update funding activity",
-        "description": "funding activity",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
-          },
-          {
-            "in": "path",
-            "name": "fundingId",
-            "description": "funding id"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/object activity"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "success update funding",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": "200"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "success"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/object activity"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "input not valid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 405
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "input not valid !"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "error to update",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 400
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "update failed, please try again !"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "funding activity"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "delete period",
-        "description": "update period",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
-          },
-          {
-            "in": "path",
-            "name": "fundingId",
-            "description": "funding id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "success delete",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": "200"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "success"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/funding?page={page}&limit={limit}": {
-      "get": {
-        "tags": [
-          "funding activity"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
-          },
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer"
-            },
-            "description": "page"
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "integer"
-            },
-            "description": "limit"
-          }
-        ],
-        "description": "get all data funding with paging",
-        "responses": {
-          "200": {
-            "description": "Success get all funding",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "number",
-                      "example": "200"
-                    },
-                    "status": {
-                      "type": "string",
-                      "example": "success"
-                    },
-                    "page": {
-                      "type": "string",
-                      "example": "1"
-                    },
-                    "limit": {
-                      "type": "string",
-                      "example": "10"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/object activity"
+                        "$ref": "#/components/schemas/object report"
                       }
                     }
                   }
@@ -1616,6 +1136,11 @@
       "object activity": {
         "type": "object",
         "properties": {
+          "id": {
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          },
           "input_date": {
             "required": true,
             "type": "string",
@@ -1629,12 +1154,83 @@
           "amount": {
             "required": true,
             "type": "integer",
-            "example": "2000000"
+            "example": "Rp200.000,00"
           },
           "type_transaction": {
             "required": true,
             "type": "string",
             "example": "debit"
+          },
+          "period": {
+            "required": true,
+            "type": "object",
+            "properties": {
+              "id": {
+                "required": true,
+                "type": "integer",
+                "example": "1"
+              },
+              "year": {
+                "required": true,
+                "type": "string",
+                "example": "2023"
+              },
+              "month": {
+                "required": true,
+                "type": "string",
+                "example": "juli"
+              }
+            }
+          }
+        }
+      },
+      "request object activity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          },
+          "input_date": {
+            "required": true,
+            "type": "string",
+            "example": "2023-03-01"
+          },
+          "description": {
+            "required": true,
+            "type": "string",
+            "example": "pembelian tanah 1 hektar"
+          },
+          "amount": {
+            "required": true,
+            "type": "integer",
+            "example": "Rp200.000,00"
+          },
+          "type_transaction": {
+            "required": true,
+            "type": "string",
+            "example": "debit"
+          },
+          "year_period_id": {
+            "required": true,
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "object report": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "required": true,
+            "type": "string",
+            "example": "januari"
+          },
+          "total": {
+            "required": true,
+            "type": "string",
+            "example": "Rp25.600.000,00"
           }
         }
       }

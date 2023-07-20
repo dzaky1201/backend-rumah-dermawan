@@ -1,13 +1,13 @@
 package app
 
 import (
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"rumahdermawan/backedn-rdi/controller/activity"
 	"rumahdermawan/backedn-rdi/controller/period"
 	"rumahdermawan/backedn-rdi/controller/user"
+	cors2 "rumahdermawan/backedn-rdi/helper/cors"
 	"rumahdermawan/backedn-rdi/model/web"
 	user2 "rumahdermawan/backedn-rdi/service/user"
 	"strings"
@@ -15,7 +15,7 @@ import (
 
 func NewRouter(userController user.UserController, periodController period.PeriodController, activityController activity.ActivityController, token user.UserToken, userService user2.UserService) *gin.Engine {
 	router := gin.Default()
-	router.Use(cors.Default())
+	router.Use(cors2.Default())
 
 	api := router.Group("/api/v1")
 	api.POST("/user/register", userController.SaveUser)
