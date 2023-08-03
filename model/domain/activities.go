@@ -1,5 +1,7 @@
 package domain
 
+import "time"
+
 type OperationActivity struct {
 	Id              uint
 	DateNote        string
@@ -8,6 +10,7 @@ type OperationActivity struct {
 	TypeTransaction string
 	YearPeriodId    uint
 	YearPeriod      YearPeriod
+	UpdatedAt       time.Time
 }
 
 type FundingActivity struct {
@@ -18,6 +21,7 @@ type FundingActivity struct {
 	TypeTransaction string
 	YearPeriodId    uint
 	YearPeriod      YearPeriod
+	UpdatedAt       time.Time
 }
 type InvestsActivity struct {
 	Id              uint
@@ -27,4 +31,5 @@ type InvestsActivity struct {
 	TypeTransaction string
 	YearPeriodId    uint
 	YearPeriod      YearPeriod
+	UpdatedAt       time.Time
 }

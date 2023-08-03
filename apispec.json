@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://rumah-dermawan-backend-6d8a2add9817.herokuapp.com/api/v1"
+      "url": "https://test.rumahdermawan.com/api/v1"
     },
     {
       "url": "http://localhost:8080/api/v1"
@@ -481,18 +481,6 @@
         "security": [
           {
             "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "format": "token"
-            },
-            "required": true,
-            "description": "token from login"
           }
         ],
         "responses": {

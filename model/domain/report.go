@@ -2,7 +2,7 @@ package domain
 
 type ReportActivity struct {
 	Month string
-	Total string
+	Total int
 }
 
 type AllActivity struct {

@@ -2,6 +2,7 @@ package helper
 
 import (
 	"encoding/json"
+	"fmt"
 	"rumahdermawan/backedn-rdi/model/domain"
 	"rumahdermawan/backedn-rdi/model/web/activities"
 	"rumahdermawan/backedn-rdi/model/web/period"
@@ -30,6 +31,7 @@ func ToPeriodResponse(yearModel domain.YearPeriod) period.PeriodResponse {
 		Id:    yearModel.Id,
 		Year:  data.Year,
 		Month: data.Month,
+		Label: fmt.Sprintf("%s %s", data.Month, data.Year),
 	}
 }
 
@@ -101,18 +103,21 @@ func ToInvestActivityResponseList(data []domain.InvestsActivity) []activities.Ac
 	return response
 }
 
-func ToActivityReportResponseObject(data domain.ReportActivity) activities.ActivityReportResponse {
-	return activities.ActivityReportResponse{
-		Month: data.Month,
-		Total: data.Total,
-	}
-}
-
-func ToActivityReportResponse(data []domain.ReportActivity) []activities.ActivityReportResponse {
-	var response []activities.ActivityReportResponse
+func ToActivityReportResponse(data []domain.ReportActivity) activities.ActivityReportResponse {
+	var responseMonth []activities.ActivityReportMonth
+	var responseTotal []activities.ActivityReportTotal
+	var responseAllData []activities.ActivityReportAll
 
 	for _, activity := range data {
-		response = append(response, ToActivityReportResponseObject(activity))
+		responseMonth = append(responseMonth, activities.ActivityReportMonth{Month: activity.Month})
+		responseTotal = append(responseTotal, activities.ActivityReportTotal{Total: activity.Total})
+		responseAllData = append(responseAllData, activities.ActivityReportAll{
+			Month: activity.Month,
+			Total: activity.Total,
+		})
 	}
-	return response
+	return activities.ActivityReportResponse{
+		Month: responseMonth,
+		Total: responseTotal, AllData: responseAllData,
+	}
 }

@@ -10,6 +10,20 @@ type ActivityResponse struct {
 }
 
 type ActivityReportResponse struct {
+	AllData interface{} `json:"allData"`
+	Month   interface{} `json:"month"`
+	Total   interface{} `json:"total"`
+}
+
+type ActivityReportAll struct {
 	Month string `json:"month"`
-	Total string `json:"total"`
+	Total int    `json:"total"`
+}
+
+type ActivityReportMonth struct {
+	Month string `json:"name"`
+}
+
+type ActivityReportTotal struct {
+	Total int `json:"total"`
 }

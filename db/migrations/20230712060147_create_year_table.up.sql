@@ -3,7 +3,9 @@ create table year_periods
     id          serial not null,
     info_period jsonb,
     created_at  timestamp default current_timestamp,
-    primary key (id)
+    updated_at  timestamp default current_timestamp,
+    primary key (id),
+    constraint wallet_customer_unique unique (info_period)
 
 );
 

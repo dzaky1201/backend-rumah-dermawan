@@ -10,19 +10,19 @@ type ActivitiyRepository interface {
 	FindByIdOperation(Id int) (domain.OperationActivity, error)
 	UpdateOperation(activity domain.OperationActivity) (domain.OperationActivity, error)
 	DeleteOperation(Id int) error
-	FindAllOperation(param activities.ActivityQueryParam) ([]domain.OperationActivity, error)
+	FindAllOperation(param activities.ActivityQueryParam) ([]domain.OperationActivity, int, int, error)
 
 	SaveFunding(activity domain.FundingActivity) (domain.FundingActivity, error)
 	FindByIdFunding(Id int) (domain.FundingActivity, error)
 	UpdateFunding(activity domain.FundingActivity) (domain.FundingActivity, error)
 	DeleteFunding(Id int) error
-	FindAllFunding(param activities.ActivityQueryParam) ([]domain.FundingActivity, error)
+	FindAllFunding(param activities.ActivityQueryParam) ([]domain.FundingActivity, int, int, error)
 
 	SaveInvest(activity domain.InvestsActivity) (domain.InvestsActivity, error)
 	FindByIdInvest(Id int) (domain.InvestsActivity, error)
 	UpdateInvest(activity domain.InvestsActivity) (domain.InvestsActivity, error)
 	DeleteInvest(Id int) error
-	FindAllInvest(param activities.ActivityQueryParam) ([]domain.InvestsActivity, error)
+	FindAllInvest(param activities.ActivityQueryParam) ([]domain.InvestsActivity, int, int, error)
 
 	ReportActivity(year string) ([]domain.ReportActivity, error)
 }

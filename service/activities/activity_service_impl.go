@@ -265,35 +265,35 @@ func (service *ActivityServiceImpl) Delete(activityId int, deleteType string) er
 
 }
 
-func (service *ActivityServiceImpl) FindAll(param activities2.ActivityQueryParam, findAllType string) ([]activities2.ActivityResponse, error) {
+func (service *ActivityServiceImpl) FindAll(param activities2.ActivityQueryParam, findAllType string) ([]activities2.ActivityResponse, int, int, error) {
 	switch {
 	case findAllType == "operation":
-		data, err := service.ActivityRepository.FindAllOperation(param)
+		data, count, offset, err := service.ActivityRepository.FindAllOperation(param)
 		if err != nil {
-			return helper.ToOperationActivityResponseList(data), err
+			return helper.ToOperationActivityResponseList(data), 0, 0, err
 		}
 
-		return helper.ToOperationActivityResponseList(data), nil
+		return helper.ToOperationActivityResponseList(data), count, offset, nil
 	case findAllType == "funding":
-		data, err := service.ActivityRepository.FindAllFunding(param)
+		data, count, offset, err := service.ActivityRepository.FindAllFunding(param)
 		if err != nil {
-			return helper.ToFundingActivityResponseList(data), err
+			return helper.ToFundingActivityResponseList(data), 0, 0, err
 		}
 
-		return helper.ToFundingActivityResponseList(data), nil
+		return helper.ToFundingActivityResponseList(data), count, offset, nil
 	case findAllType == "invest":
-		data, err := service.ActivityRepository.FindAllInvest(param)
+		data, count, offset, err := service.ActivityRepository.FindAllInvest(param)
 		if err != nil {
-			return helper.ToInvestActivityResponseList(data), err
+			return helper.ToInvestActivityResponseList(data), 0, 0, err
 		}
 
-		return helper.ToInvestActivityResponseList(data), nil
+		return helper.ToInvestActivityResponseList(data), count, offset, nil
 	}
 
-	return []activities2.ActivityResponse{}, nil
+	return []activities2.ActivityResponse{}, 0, 0, nil
 }
 
-func (service *ActivityServiceImpl) ReportActivityAll(year string) ([]activities2.ActivityReportResponse, error) {
+func (service *ActivityServiceImpl) ReportActivityAll(year string) (activities2.ActivityReportResponse, error) {
 	data, err := service.ActivityRepository.ReportActivity(year)
 	if err != nil {
 		return helper.ToActivityReportResponse(data), err

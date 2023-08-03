@@ -41,7 +41,7 @@ func (controller *PeriodControllerImpl) Save(c *gin.Context) {
 		response := web.WebResponse{
 			Code:   http.StatusInternalServerError,
 			Status: errData.Error(),
-			Data:   nil,
+			Data:   "periode sudah ada",
 		}
 
 		c.JSON(http.StatusInternalServerError, response)

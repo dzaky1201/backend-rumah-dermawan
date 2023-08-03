@@ -55,7 +55,7 @@ func (repository *ActivityRepositoryImpl) DeleteOperation(Id int) error {
 	return nil
 }
 
-func (repository *ActivityRepositoryImpl) FindAllOperation(param activities.ActivityQueryParam) ([]domain.OperationActivity, error) {
+func (repository *ActivityRepositoryImpl) FindAllOperation(param activities.ActivityQueryParam) ([]domain.OperationActivity, int, int, error) {
 	var operationList []domain.OperationActivity
 	if param.Page == 0 {
 		param.Page = 1
@@ -70,18 +70,20 @@ func (repository *ActivityRepositoryImpl) FindAllOperation(param activities.Acti
 
 	if param.Description != "" {
 		desc := fmt.Sprintf("'''%s'''", param.Description)
-		err := repository.db.Table("operation_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Find(&operationList).Error
+		err := repository.db.Table("operation_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Order("updated_at desc").Find(&operationList).Error
 		if err != nil {
-			return operationList, err
+			return operationList, 0, 0, err
 		}
 	} else {
-		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Find(&operationList).Error
+		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Order("updated_at desc").Find(&operationList).Error
 		if err != nil {
-			return operationList, err
+			return operationList, 0, 0, err
 		}
 	}
+	totalCount := int64(0)
+	repository.db.Table("operation_activities").Count(&totalCount)
 
-	return operationList, nil
+	return operationList, int(totalCount), offset, nil
 }
 
 func (repository *ActivityRepositoryImpl) SaveFunding(activity domain.FundingActivity) (domain.FundingActivity, error) {
@@ -123,7 +125,7 @@ func (repository *ActivityRepositoryImpl) DeleteFunding(Id int) error {
 	return nil
 }
 
-func (repository *ActivityRepositoryImpl) FindAllFunding(param activities.ActivityQueryParam) ([]domain.FundingActivity, error) {
+func (repository *ActivityRepositoryImpl) FindAllFunding(param activities.ActivityQueryParam) ([]domain.FundingActivity, int, int, error) {
 	var fundingList []domain.FundingActivity
 	if param.Page == 0 {
 		param.Page = 1
@@ -140,16 +142,19 @@ func (repository *ActivityRepositoryImpl) FindAllFunding(param activities.Activi
 		desc := fmt.Sprintf("'''%s'''", param.Description)
 		err := repository.db.Table("funding_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Find(&fundingList).Error
 		if err != nil {
-			return fundingList, err
+			return fundingList, 0, 0, err
 		}
 	} else {
 		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Find(&fundingList).Error
 		if err != nil {
-			return fundingList, err
+			return fundingList, 0, 0, err
 		}
 	}
 
-	return fundingList, nil
+	totalCount := int64(0)
+	repository.db.Table("funding_activities").Count(&totalCount)
+
+	return fundingList, int(totalCount), offset, nil
 }
 
 func (repository *ActivityRepositoryImpl) SaveInvest(activity domain.InvestsActivity) (domain.InvestsActivity, error) {
@@ -191,7 +196,7 @@ func (repository *ActivityRepositoryImpl) DeleteInvest(Id int) error {
 	return nil
 }
 
-func (repository *ActivityRepositoryImpl) FindAllInvest(param activities.ActivityQueryParam) ([]domain.InvestsActivity, error) {
+func (repository *ActivityRepositoryImpl) FindAllInvest(param activities.ActivityQueryParam) ([]domain.InvestsActivity, int, int, error) {
 	var investList []domain.InvestsActivity
 	if param.Page == 0 {
 		param.Page = 1
@@ -208,21 +213,23 @@ func (repository *ActivityRepositoryImpl) FindAllInvest(param activities.Activit
 		desc := fmt.Sprintf("'''%s'''", param.Description)
 		err := repository.db.Table("invests_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Find(&investList).Error
 		if err != nil {
-			return investList, err
+			return investList, 0, 0, err
 		}
 	} else {
 		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Find(&investList).Error
 		if err != nil {
-			return investList, err
+			return investList, 0, 0, err
 		}
 	}
+	totalCount := int64(0)
+	repository.db.Table("invests_activities").Count(&totalCount)
 
-	return investList, nil
+	return investList, int(totalCount), offset, nil
 }
 
 func (repository *ActivityRepositoryImpl) ReportActivity(year string) ([]domain.ReportActivity, error) {
 	var allData []domain.ReportActivity
-	errData := repository.db.Raw("select info_period ->> 'Month' as month, sum(case when type_transaction = 'credit' then amount * -1 when type_transaction = 'debit' then amount end) as total from (select * from year_periods join operation_activities oa on year_periods.id = oa.year_period_id union select * from year_periods join invests_activities ia on year_periods.id = ia.year_period_id union select * from year_periods join funding_activities fa on year_periods.id = fa.year_period_id) as all_data where info_period ->> 'Year' = ? group by info_period ->> 'Month'", year).Scan(&allData).Error
+	errData := repository.db.Raw("select info_period ->> 'Month' as month, sum(case when type_transaction = 'credit' then amount * -1 when type_transaction = 'debit' then amount end) as total from (select * from year_periods join operation_activities oa on year_periods.id = oa.year_period_id union select * from year_periods join invests_activities ia on year_periods.id = ia.year_period_id union select * from year_periods join funding_activities fa on year_periods.id = fa.year_period_id) as all_data where info_period ->> 'Year' = ? group by info_period ->> 'Month', year_period_id order by year_period_id", year).Scan(&allData).Error
 
 	if errData != nil {
 		return []domain.ReportActivity{}, errData

@@ -130,34 +130,28 @@ func (controller *ActivityControllerImpl) FindAll(c *gin.Context) {
 
 	param := activities2.ActivityQueryParam{Page: page, Limit: limit, Description: description}
 
-	dataList, err := controller.service.FindAll(param, findAllType)
+	dataList, count, offset, err := controller.service.FindAll(param, findAllType)
 	if err != nil {
-		response := web.WebResponse{
+		response := web.WebResponseList{
 			Code:   http.StatusInternalServerError,
 			Status: err.Error(),
+			Count:  0,
+			Offset: 0,
 			Data:   nil,
 		}
 
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
-	if dataList != nil {
-		response := web.WebResponse{
-			Code:   http.StatusOK,
-			Status: "Success",
-			Data:   dataList,
-		}
-		c.JSON(http.StatusOK, response)
-		return
-	} else {
-		response := web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "error",
-			Data:   "not found",
-		}
-		c.JSON(http.StatusBadRequest, response)
-		return
+	response := web.WebResponseList{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Count:  count,
+		Offset: offset,
+		Data:   dataList,
 	}
+	c.JSON(http.StatusOK, response)
+	return
 
 }
 
@@ -202,22 +196,12 @@ func (controller *ActivityControllerImpl) FindReportActivity(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
-
-	if data != nil {
-		response := web.WebResponse{
-			Code:   http.StatusOK,
-			Status: "Success",
-			Data:   data,
-		}
-		c.JSON(http.StatusOK, response)
-		return
-	} else {
-		response := web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "error",
-			Data:   "not found",
-		}
-		c.JSON(http.StatusBadRequest, response)
-		return
+	response := web.WebResponse{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   data,
 	}
+	c.JSON(http.StatusOK, response)
+	return
+
 }
