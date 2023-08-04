@@ -6,6 +6,7 @@ type YearPeriod struct {
 	OperationActivity []OperationActivity
 	FundingActivity   []FundingActivity
 	InvestsActivity   []InvestsActivity
+	HaveRelation      int
 }
 
 type InfoPeriod struct {

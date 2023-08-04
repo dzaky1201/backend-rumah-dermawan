@@ -28,10 +28,11 @@ func ToPeriodResponse(yearModel domain.YearPeriod) period.PeriodResponse {
 	PanicIfError(err)
 
 	return period.PeriodResponse{
-		Id:    yearModel.Id,
-		Year:  data.Year,
-		Month: data.Month,
-		Label: fmt.Sprintf("%s %s", data.Month, data.Year),
+		Id:           yearModel.Id,
+		Year:         data.Year,
+		Month:        data.Month,
+		Label:        fmt.Sprintf("%s %s", data.Month, data.Year),
+		HaveRelation: yearModel.HaveRelation,
 	}
 }
 

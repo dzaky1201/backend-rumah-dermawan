@@ -35,7 +35,7 @@ func InitializedServer() *gin.Engine {
 	periodServiceImpl := period2.NewPeriodService(periodRepositoryImpl, validate)
 	periodControllerImpl := period3.NewPeriodController(periodServiceImpl)
 	activityRepositoryImpl := activities.NewActivityRepository(db)
-	activityServiceImpl := activities2.NewActivityService(activityRepositoryImpl, validate)
+	activityServiceImpl := activities2.NewActivityService(activityRepositoryImpl, periodRepositoryImpl, validate)
 	activityControllerImpl := activity.NewActivityController(activityServiceImpl)
 	engine := app.NewRouter(userControllerImpl, periodControllerImpl, activityControllerImpl, userTokenImpl, userServiceImpl)
 	return engine

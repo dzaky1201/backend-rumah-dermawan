@@ -6,16 +6,19 @@ import (
 	"rumahdermawan/backedn-rdi/model/domain"
 	activities2 "rumahdermawan/backedn-rdi/model/web/activities"
 	"rumahdermawan/backedn-rdi/repository/activities"
+	"rumahdermawan/backedn-rdi/repository/period"
 )
 
 type ActivityServiceImpl struct {
 	ActivityRepository activities.ActivitiyRepository
+	PeriodRepository   period.PeriodRepository
 	Validate           *validator.Validate
 }
 
-func NewActivityService(repository activities.ActivitiyRepository, validate *validator.Validate) *ActivityServiceImpl {
+func NewActivityService(repository activities.ActivitiyRepository, periodRepos period.PeriodRepository, validate *validator.Validate) *ActivityServiceImpl {
 	return &ActivityServiceImpl{
 		ActivityRepository: repository,
+		PeriodRepository:   periodRepos,
 		Validate:           validate,
 	}
 }
@@ -42,6 +45,15 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 
 		dataPeriod, _ := service.ActivityRepository.FindByIdOperation(int(response.Id))
 		response.YearPeriod = dataPeriod.YearPeriod
+
+		// update kolum having_relation di tabel year
+		periodReq := domain.YearPeriod{
+			Id: dataPeriod.YearPeriod.Id,
+		}
+		_, err := service.PeriodRepository.UpdateHavingRelation(periodReq, dataPeriod.YearPeriod.HaveRelation)
+		if err != nil {
+			return activities2.ActivityResponse{}, err
+		}
 
 		return helper.ToOperationActivityResponse(response), nil
 	} else if createType == "invest" {

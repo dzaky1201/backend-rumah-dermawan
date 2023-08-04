@@ -2,6 +2,7 @@ create table year_periods
 (
     id          serial not null,
     info_period jsonb,
+    have_relation int default 0,
     created_at  timestamp default current_timestamp,
     updated_at  timestamp default current_timestamp,
     primary key (id),

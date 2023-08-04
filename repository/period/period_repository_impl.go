@@ -33,6 +33,15 @@ func (repository *PeriodRepositoryImpl) Update(period domain.YearPeriod) (domain
 	return period, nil
 }
 
+func (repository *PeriodRepositoryImpl) UpdateHavingRelation(period domain.YearPeriod, havingRelation int) (domain.YearPeriod, error) {
+	err := repository.db.Model(domain.YearPeriod{}).Where("id = ?", period.Id).Updates(domain.YearPeriod{HaveRelation: havingRelation + 1}).Error
+	if err != nil {
+		return period, err
+	}
+
+	return period, nil
+}
+
 func (repository *PeriodRepositoryImpl) Delete(iD int) error {
 	err := repository.db.Delete(&domain.YearPeriod{}, iD).Error
 

@@ -6,5 +6,6 @@ create table users
     password   varchar(255) not null,
     created_at timestamp default current_timestamp,
     updated_at timestamp default current_timestamp,
-    primary key (id)
+    primary key (id),
+    constraint email_unique unique (email)
 );
