@@ -140,12 +140,12 @@ func (repository *ActivityRepositoryImpl) FindAllFunding(param activities.Activi
 
 	if param.Description != "" {
 		desc := fmt.Sprintf("'''%s'''", param.Description)
-		err := repository.db.Table("funding_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Find(&fundingList).Error
+		err := repository.db.Table("funding_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Order("updated_at desc").Find(&fundingList).Error
 		if err != nil {
 			return fundingList, 0, 0, err
 		}
 	} else {
-		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Find(&fundingList).Error
+		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Order("updated_at desc").Find(&fundingList).Error
 		if err != nil {
 			return fundingList, 0, 0, err
 		}
@@ -211,12 +211,12 @@ func (repository *ActivityRepositoryImpl) FindAllInvest(param activities.Activit
 
 	if param.Description != "" {
 		desc := fmt.Sprintf("'''%s'''", param.Description)
-		err := repository.db.Table("invests_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Find(&investList).Error
+		err := repository.db.Table("invests_activities").Preload("YearPeriod").Where("description @@ to_tsquery(?)", desc).Offset(offset).Limit(param.Limit).Order("updated_at desc").Find(&investList).Error
 		if err != nil {
 			return investList, 0, 0, err
 		}
 	} else {
-		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Find(&investList).Error
+		err := repository.db.Preload("YearPeriod").Limit(param.Limit).Offset(offset).Order("updated_at desc").Find(&investList).Error
 		if err != nil {
 			return investList, 0, 0, err
 		}

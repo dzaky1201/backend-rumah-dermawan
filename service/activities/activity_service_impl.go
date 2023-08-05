@@ -1,7 +1,9 @@
 package activities
 
 import (
+	"fmt"
 	"github.com/go-playground/validator/v10"
+	"log"
 	"rumahdermawan/backedn-rdi/helper"
 	"rumahdermawan/backedn-rdi/model/domain"
 	activities2 "rumahdermawan/backedn-rdi/model/web/activities"
@@ -50,7 +52,7 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 		periodReq := domain.YearPeriod{
 			Id: dataPeriod.YearPeriod.Id,
 		}
-		_, err := service.PeriodRepository.UpdateHavingRelation(periodReq, dataPeriod.YearPeriod.HaveRelation)
+		_, err := service.PeriodRepository.UpdateHavingRelationIncrement(periodReq, dataPeriod.YearPeriod.HaveRelation)
 		if err != nil {
 			return activities2.ActivityResponse{}, err
 		}
@@ -72,6 +74,14 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 		dataPeriod, _ := service.ActivityRepository.FindByIdInvest(int(response.Id))
 		response.YearPeriod = dataPeriod.YearPeriod
 
+		periodReq := domain.YearPeriod{
+			Id: dataPeriod.YearPeriod.Id,
+		}
+		_, err := service.PeriodRepository.UpdateHavingRelationIncrement(periodReq, dataPeriod.YearPeriod.HaveRelation)
+		if err != nil {
+			return activities2.ActivityResponse{}, err
+		}
+
 		return helper.ToInvestActivityResponse(response), nil
 	} else if createType == "funding" {
 		createRequest := domain.FundingActivity{
@@ -88,6 +98,14 @@ func (service *ActivityServiceImpl) Save(request activities2.ActivityCreateReque
 
 		dataPeriod, _ := service.ActivityRepository.FindByIdFunding(int(response.Id))
 		response.YearPeriod = dataPeriod.YearPeriod
+
+		periodReq := domain.YearPeriod{
+			Id: dataPeriod.YearPeriod.Id,
+		}
+		_, err := service.PeriodRepository.UpdateHavingRelationIncrement(periodReq, dataPeriod.YearPeriod.HaveRelation)
+		if err != nil {
+			return activities2.ActivityResponse{}, err
+		}
 
 		return helper.ToFundingActivityResponse(response), nil
 	}
@@ -254,18 +272,41 @@ func (service *ActivityServiceImpl) FindById(activityId int, findType string) (a
 func (service *ActivityServiceImpl) Delete(activityId int, deleteType string) error {
 
 	if deleteType == "operation" {
+		dataPeriod, _ := service.ActivityRepository.FindByIdOperation(activityId)
+		periodReq := domain.YearPeriod{Id: dataPeriod.YearPeriod.Id}
+		log.Println(fmt.Sprintf("ini data %d", dataPeriod.YearPeriod.Id))
+		_, errPeriod := service.PeriodRepository.UpdateHavingRelationDecrement(periodReq, dataPeriod.YearPeriod.HaveRelation)
+		if errPeriod != nil {
+			return errPeriod
+		}
+
 		err := service.ActivityRepository.DeleteOperation(activityId)
 		if err != nil {
 			return err
 		}
+
 		return nil
 	} else if deleteType == "invest" {
+		dataPeriod, _ := service.ActivityRepository.FindByIdInvest(activityId)
+		periodReq := domain.YearPeriod{Id: dataPeriod.YearPeriod.Id}
+		_, errPeriod := service.PeriodRepository.UpdateHavingRelationDecrement(periodReq, dataPeriod.YearPeriod.HaveRelation)
+		if errPeriod != nil {
+			return errPeriod
+		}
+
 		err := service.ActivityRepository.DeleteInvest(activityId)
 		if err != nil {
 			return err
 		}
 		return nil
 	} else if deleteType == "funding" {
+		dataPeriod, _ := service.ActivityRepository.FindByIdFunding(activityId)
+		periodReq := domain.YearPeriod{Id: dataPeriod.YearPeriod.Id}
+		_, errPeriod := service.PeriodRepository.UpdateHavingRelationDecrement(periodReq, dataPeriod.YearPeriod.HaveRelation)
+		if errPeriod != nil {
+			return errPeriod
+		}
+
 		err := service.ActivityRepository.DeleteFunding(activityId)
 		if err != nil {
 			return err
