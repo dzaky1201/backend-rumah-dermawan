@@ -13,4 +13,5 @@ type PeriodRepository interface {
 	UpdateHavingRelationDecrement(period domain.YearPeriod, havingRelation int) (domain.YearPeriod, error)
 	Delete(Id int) error
 	FindAll(param period.PeriodQueryParam) ([]domain.YearPeriod, error)
+	FindAllYear() ([]domain.YearList, error)
 }

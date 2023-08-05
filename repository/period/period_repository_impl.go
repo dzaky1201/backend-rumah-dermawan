@@ -98,3 +98,14 @@ func (repository *PeriodRepositoryImpl) FindById(period domain.YearPeriod) (doma
 
 	return dataPeriod, nil
 }
+
+func (repository *PeriodRepositoryImpl) FindAllYear() ([]domain.YearList, error) {
+	var allData []domain.YearList
+	errData := repository.db.Raw("select info_period ->> 'Year' as year from year_periods group by info_period ->> 'Year'").Scan(&allData).Error
+
+	if errData != nil {
+		return []domain.YearList{}, errData
+	}
+
+	return allData, nil
+}

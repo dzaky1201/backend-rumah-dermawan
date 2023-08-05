@@ -7,3 +7,7 @@ type PeriodResponse struct {
 	Label        string `json:"label"`
 	HaveRelation int    `json:"have_relation"`
 }
+
+type AllYearResponse struct {
+	Year string `json:"year"`
+}

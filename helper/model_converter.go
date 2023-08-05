@@ -122,3 +122,11 @@ func ToActivityReportResponse(data []domain.ReportActivity) activities.ActivityR
 		Total: responseTotal, AllData: responseAllData,
 	}
 }
+
+func ToYearResponseList(data []domain.YearList) []period.AllYearResponse {
+	var response []period.AllYearResponse
+	for _, yearList := range data {
+		response = append(response, period.AllYearResponse{Year: yearList.Year})
+	}
+	return response
+}

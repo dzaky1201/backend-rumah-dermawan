@@ -13,3 +13,7 @@ type InfoPeriod struct {
 	Month string
 	Year  string
 }
+
+type YearList struct {
+	Year string
+}

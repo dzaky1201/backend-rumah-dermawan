@@ -184,3 +184,25 @@ func (controller *PeriodControllerImpl) FindById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (controller *PeriodControllerImpl) FindAllYear(c *gin.Context) {
+
+	dataList, err := controller.periodService.FindAllYear()
+	if err != nil {
+		response := web.WebResponse{
+			Code:   http.StatusInternalServerError,
+			Status: err.Error(),
+			Data:   nil,
+		}
+
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+	response := web.WebResponse{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   dataList,
+	}
+
+	c.JSON(http.StatusOK, response)
+}

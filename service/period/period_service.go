@@ -11,4 +11,5 @@ type PeriodService interface {
 	FindById(request domain.YearPeriod) (period.PeriodResponse, error)
 	Delete(periodId int) error
 	FindAll(page int, limit int, year string) ([]period.PeriodResponse, error)
+	FindAllYear() ([]period.AllYearResponse, error)
 }

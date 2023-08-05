@@ -8,4 +8,5 @@ type PeriodController interface {
 	Delete(c *gin.Context)
 	FindAll(c *gin.Context)
 	FindById(c *gin.Context)
+	FindAllYear(c *gin.Context)
 }

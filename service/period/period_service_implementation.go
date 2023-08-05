@@ -121,3 +121,12 @@ func (service *PeriodServiceImpl) FindById(request domain.YearPeriod) (period2.P
 
 	return helper.ToPeriodResponse(data), nil
 }
+
+func (service *PeriodServiceImpl) FindAllYear() ([]period2.AllYearResponse, error) {
+	data, err := service.PeriodRepository.FindAllYear()
+	if err != nil {
+		return helper.ToYearResponseList(data), err
+	}
+
+	return helper.ToYearResponseList(data), nil
+}
