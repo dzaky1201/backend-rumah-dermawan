@@ -53,8 +53,8 @@ func (service *UserServiceImpl) FindByEmail(request user2.UserLoginRequest, toke
 	}
 
 	errPass := bcrypt.CompareHashAndPassword([]byte(userLogin.Password), []byte(request.Password))
-	if err != nil {
-		return user2.UserResponse{}, errPass
+	if errPass != nil {
+		return user2.UserResponse{}, errors.New("password salah")
 	}
 
 	return helper.ToUserResponse(userLogin, token), nil
