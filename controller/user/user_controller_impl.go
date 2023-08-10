@@ -42,7 +42,7 @@ func (controller *UserControllerImpl) SaveUser(c *gin.Context) {
 	if errRegister != nil {
 		response := web.WebResponse{
 			Code:   http.StatusMethodNotAllowed,
-			Status: "error",
+			Status: errRegister.Error(),
 			Data:   errRegister,
 		}
 		c.JSON(http.StatusMethodNotAllowed, response)

@@ -36,7 +36,11 @@ func (service *UserServiceImpl) SaveUser(request user2.UserCreateRequest, token 
 		Password: string(passwordHash),
 	}
 
-	userRes, _ := service.repository.SaveUser(userReq)
+	userRes, errReg := service.repository.SaveUser(userReq)
+
+	if errReg != nil {
+		return user2.UserResponse{}, errors.New("email sudah ada")
+	}
 
 	return helper.ToUserResponse(userRes, token), nil
 
